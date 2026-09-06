@@ -1,0 +1,297 @@
+// Prerequisite gap finder — data model
+//
+// Two layers, mirroring hsla-course-data.ts:
+//
+//   1. CATALOG    Course + CoursePrerequisite. Straight from the HSLA
+//                 Directory of Courses. Coarse: "Calculus requires Precalculus."
+//
+//   2. SKILL      Skill + SkillDependency. Written by you and your teachers,
+//                 not in the catalog. Fine: "a student failing continuity is
+//                 shaky on factoring." This layer is the product.
+//
+// A diagnostic run is an Attempt. It has no student identity of any kind —
+// see the note on that model before adding a field to it.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// ENUMS
+// ---------------------------------------------------------------------------
+
+/// Mirrors Course["subject"] in hsla-course-data.ts.
+enum Subject {
+  English
+  History
+  Mathematics
+  Science
+  CollegePersistence @map("College Persistence")
+}
+
+/// Mirrors ChainType. Drives how a Skill is diagnosed, not just how it renders.
+///
+/// content — you cannot do the later thing without knowing the earlier thing.
+///           Math, science. A question has a right answer.
+/// skill   — the gap is procedural, not factual. English, history. A question
+///           has a best answer, and every distractor names a specific bad move
+///           (summarizing instead of arguing, dropping a quote, restating).
+enum ChainType {
+  content
+  skill
+}
+
+// ---------------------------------------------------------------------------
+// LAYER 1 — THE CATALOG
+// ---------------------------------------------------------------------------
+
+model Course {
+  /// The catalog code ("MCFYHAR") is the primary key. It is the join key used
+  /// everywhere in hsla-course-data.ts, which makes the seed idempotent and
+  /// makes every foreign key readable in psql.
+  code String @id
+
+  title        String
+  subject      Subject
+  credits      Int
+  required     Boolean
+  /// Course["grades"] — e.g. [10, 11].
+  grades       Int[]
+  externalExam String?
+  notes        String?
+
+  /// Derived from notes at seed time ("Not offered SY 25-26"). The course
+  /// picker only lists offered courses; the row stays for the graph.
+  offered Boolean @default(true)
+
+  // Self-referencing prerequisite graph, as an explicit join model.
+  /// Edges where this course is the dependent: its prerequisites.
+  prerequisites CoursePrerequisite[] @relation("Dependent")
+  /// Edges where this course is the prerequisite: what it unlocks.
+  unlocks       CoursePrerequisite[] @relation("Prerequisite")
+
+  /// Skills this course depends on (Skill.courseCode: the course a skill is a
+  /// prerequisite FOR).
+  skills        Skill[]              @relation("SkillTargetCourse")
+  /// Skills whose origin is this course, when the origin is inside the catalog.
+  originSkills  Skill[]              @relation("SkillOriginCourse")
+
+  attempts Attempt[]
+
+  @@index([subject])
+  @@index([offered])
+}
+
+/// One edge of the official prerequisite graph. Explicit rather than an
+/// implicit m-n relation because the edges carry data: AP Physics C is
+/// "concurrent with or after Calculus BC I", which is a weaker edge than
+/// Calc BC II strictly following Calc BC I.
+model CoursePrerequisite {
+  /// The later course.
+  courseCode       String
+  /// The course that must come first.
+  prerequisiteCode String
+
+  /// True when the catalog allows taking both in the same year.
+  concurrentOk Boolean @default(false)
+
+  course       Course @relation("Dependent", fields: [courseCode], references: [code], onDelete: Cascade)
+  prerequisite Course @relation("Prerequisite", fields: [prerequisiteCode], references: [code], onDelete: Cascade)
+
+  @@id([courseCode, prerequisiteCode])
+  @@index([prerequisiteCode])
+}
+
+// ---------------------------------------------------------------------------
+// LAYER 2 — THE SKILL GRAPH
+// ---------------------------------------------------------------------------
+
+model Skill {
+  /// Authored slug from hsla-course-data.ts ("calc-factor"). Stable across
+  /// reseeds, so Question and AttemptAnswer rows survive a catalog refresh.
+  id String @id
+
+  name      String
+  chainType ChainType
+  weight    Int /// 1-5, how much of the target course depends on this skill. Validate in the seed; Postgres has no check constraint through Prisma.
+
+  /// The course this skill is a prerequisite FOR ("MCFYHAR").
+  courseCode String
+  course     Course @relation("SkillTargetCourse", fields: [courseCode], references: [code], onDelete: Cascade)
+
+  /// Where the skill is taught, verbatim from the data file:
+  /// "Middle school algebra", "AP Precalculus", "AP Language and Composition II".
+  origin String
+
+  /// Set only when `origin` names a real catalog course. NULL is the finding:
+  /// the skill is never formally taught anywhere in the high school. Every
+  /// Calculus skill rooted in middle school algebra has a NULL here, and
+  ///   WHERE "originCourseCode" IS NULL
+  /// is literally the query that states the problem this app exists for.
+  originCourseCode String?
+  originCourse     Course? @relation("SkillOriginCourse", fields: [originCourseCode], references: [code], onDelete: SetNull)
+
+  /// Authored display copy: broken skill -> ... -> the topic it blocks.
+  /// Denormalized on purpose. This is what the report renders today, with no
+  /// traversal. SkillDependency below is the structural version of the same
+  /// idea; when the graph is dense enough to generate this text, this column
+  /// becomes a cache.
+  chain String[]
+
+  /// Khan Academy search string from the data file.
+  practiceQuery String
+  /// Optional hand-picked link, used instead of the search URL when set.
+  practiceUrl   String?
+
+  /// Retire a skill without deleting answer history.
+  active Boolean @default(true)
+
+  questions Question[]
+  answers   AttemptAnswer[]
+
+  /// Edges where this skill is the earlier one: what it holds up.
+  blocks    SkillDependency[] @relation("Prerequisite")
+  /// Edges where this skill is the later one: what it rests on.
+  restsOn   SkillDependency[] @relation("Dependent")
+
+  @@index([courseCode])
+  @@index([chainType])
+  @@index([originCourseCode])
+}
+
+/// One edge of the skill graph: prerequisite -> dependent, "you need the
+/// earlier one to do the later one." Walking outward from a weak skill along
+/// `dependent` gives you the path up to the topic it blocks.
+///
+/// The graph must stay acyclic. Nothing in Postgres enforces that, so the
+/// traversal carries a visited-path cycle guard and the seed should assert it.
+model SkillDependency {
+  /// The earlier skill.
+  prerequisiteId String
+  /// The skill that cannot be done without it.
+  dependentId    String
+
+  /// 1-5, how completely the dependent fails when the prerequisite is weak.
+  /// Distinct from Skill.weight: weight is skill-to-course, strength is
+  /// skill-to-skill, and it is what you multiply along a path to rank chains.
+  strength Int @default(3)
+
+  /// One line for the UI: why the later thing breaks without the earlier.
+  rationale String?
+
+  prerequisite Skill @relation("Prerequisite", fields: [prerequisiteId], references: [id], onDelete: Cascade)
+  dependent    Skill @relation("Dependent", fields: [dependentId], references: [id], onDelete: Cascade)
+
+  @@id([prerequisiteId, dependentId])
+  @@index([dependentId])
+}
+
+// ---------------------------------------------------------------------------
+// THE DIAGNOSTIC
+// ---------------------------------------------------------------------------
+
+model Question {
+  id String @id @default(cuid())
+
+  skillId String
+  skill   Skill  @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  /// The stem. Store plain text with a restricted markup subset you render
+  /// yourself (the prototype's inline HTML goes through innerHTML, which is
+  /// not something to carry into a Next.js app).
+  prompt String
+
+  /// Shown after the report, not during the diagnostic. This app diagnoses.
+  explanation String?
+
+  /// Retire a bad question without deleting the answers that reference it.
+  active Boolean @default(true)
+
+  options QuestionOption[]
+  answers AttemptAnswer[]
+
+  @@index([skillId, active])
+}
+
+/// One choice. A row rather than a string in an array because a skill-chain
+/// question is only diagnostic if the wrong answers mean something: for
+/// lit-claim, one distractor is the summary, one is the plot restatement.
+/// `misconception` is what lets the report say which wrong move the student
+/// made, not just that they missed it.
+model QuestionOption {
+  id String @id @default(cuid())
+
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  text      String
+  isCorrect Boolean @default(false)
+  /// Short label for the specific error this option represents.
+  misconception String?
+  /// Authoring order. The client shuffles at render time, as the prototype does.
+  position Int
+
+  answers AttemptAnswer[]
+
+  @@unique([questionId, position])
+  @@index([questionId])
+}
+
+/// One diagnostic run.
+///
+/// Anonymous by construction. There is no student, no email, no IP, no user
+/// agent, no grade level. The cuid `id` is the only handle; the client keeps
+/// it in localStorage to re-open its own report. In a school this size, a
+/// course plus a grade plus a timestamp identifies a person, so treat every
+/// proposed column here as re-identification risk first and a feature second.
+model Attempt {
+  id String @id @default(cuid())
+
+  /// The course the student says they are taking now.
+  courseCode String
+  course     Course @relation(fields: [courseCode], references: [code], onDelete: Restrict)
+
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  answers AttemptAnswer[]
+
+  @@index([courseCode, completedAt])
+}
+
+/// One question answered inside one attempt.
+model AttemptAnswer {
+  id String @id @default(cuid())
+
+  attemptId String
+  attempt   Attempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Restrict)
+
+  selectedOptionId String?
+  selectedOption   QuestionOption? @relation(fields: [selectedOptionId], references: [id], onDelete: Restrict)
+
+  /// Denormalized from question.skill at write time. Scoring groups by skill on
+  /// every report, and this is immutable once written even if a question is
+  /// later re-pointed at a different skill.
+  skillId String
+  skill   Skill  @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  /// Resolved at write time so scoring never depends on the option rows staying
+  /// unedited.
+  correct Boolean
+
+  answeredAt DateTime @default(now())
+  /// Milliseconds on the question. Hesitation is signal for skill chains.
+  elapsedMs  Int?
+
+  @@unique([attemptId, questionId])
+  @@index([attemptId])
+  @@index([skillId])
+}
