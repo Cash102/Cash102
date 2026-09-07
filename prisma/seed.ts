@@ -248,20 +248,40 @@ async function write(): Promise<void> {
 // REPORT — printed after seeding, as a check that the data says what it should
 // ---------------------------------------------------------------------------
 
-/** The headline claim, straight out of the schema. */
+/**
+ * The headline claim, straight out of the schema: every skill whose
+ * originCourseCode IS NULL, grouped by the course that leans on it.
+ *
+ * A null origin course means the catalog contains no course that teaches the
+ * skill. Grouped this way, each block reads as "here is what this course is
+ * built on that this building never teaches."
+ */
 async function reportUntaughtSkills(): Promise<void> {
-  const untaught = await prisma.skill.findMany({
-    where: { originCourseCode: null, courseLinks: { some: {} } },
-    include: { courseLinks: { include: { course: { select: { title: true } } } } },
-    orderBy: { id: "asc" },
+  const courses = await prisma.course.findMany({
+    where: { skillLinks: { some: { skill: { originCourseCode: null } } } },
+    include: {
+      skillLinks: {
+        where: { skill: { originCourseCode: null } },
+        include: { skill: true },
+        orderBy: [{ weight: "desc" }, { skillId: "asc" }],
+      },
+    },
+    orderBy: [{ subject: "asc" }, { title: "asc" }],
   });
 
-  console.log(`\nLoad-bearing, taught by no course in the catalog — ${untaught.length} skills:`);
-  for (const skill of untaught) {
-    const courses = skill.courseLinks
-      .map((link) => `${link.course.title} (weight ${link.weight})`)
-      .join(", ");
-    console.log(`  ${skill.name}\n      origin: ${skill.origin}\n      needed by: ${courses}`);
+  const distinct = new Set(courses.flatMap((c) => c.skillLinks.map((l) => l.skillId)));
+
+  console.log("\nSkills with no course in the catalog that teaches them, by course");
+  console.log(`${distinct.size} distinct skills across ${courses.length} courses\n`);
+
+  for (const course of courses) {
+    console.log(`${course.title}  (${course.code})`);
+    for (const link of course.skillLinks) {
+      console.log(
+        `    weight ${link.weight}   ${link.skill.name.padEnd(44)} origin: ${link.skill.origin}`,
+      );
+    }
+    console.log("");
   }
 }
 
