@@ -5,3 +5,7 @@ node_modules/
 .next/
 dist/
 *.tsbuildinfo
+
+# Next.js
+.next/
+next-env.d.ts
