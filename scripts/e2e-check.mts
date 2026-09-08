@@ -131,6 +131,13 @@ check(new Set(seen).size === seen.length, "no question served twice", `(${seen.l
 await page.waitForURL(/\/report\/.+/, { timeout: 15000 });
 check(page.url().endsWith(`/report/${attemptId}`), "last answer redirects to the report");
 
+const reportText = await page.locator("main").innerText();
+check(
+  /weak link|No broken links found/.test(reportText),
+  "the report renders a finding or a clean bill",
+  reportText.split("\n")[0] ?? "",
+);
+
 await page.goto(`${BASE}/check/${attemptId}`, { waitUntil: "networkidle" });
 check(page.url().endsWith(`/report/${attemptId}`), "a completed attempt cannot be retaken");
 

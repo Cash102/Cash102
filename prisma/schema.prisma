@@ -31,7 +31,14 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  // Runtime connection. On Neon this is the POOLED endpoint (host contains
+  // "-pooler"), which is what a serverless app should hold.
   url      = env("DATABASE_URL")
+  // Migrations only. Prisma's migration engine needs advisory locks and
+  // prepared statements, which a transaction-mode pooler does not provide, so
+  // this must be Neon's DIRECT (unpooled) endpoint. Locally, set both to the
+  // same URL.
+  directUrl = env("DIRECT_URL")
 }
 
 // ---------------------------------------------------------------------------

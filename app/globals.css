@@ -4,6 +4,8 @@
 
 :root {
   color-scheme: dark;
+  --rule: #2f423d;
+  --break: #e2a03f;
 }
 
 html,
@@ -25,4 +27,65 @@ body {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }
+}
+
+/*
+ * The chain: broken skill at the top, the topic it blocks at the bottom. The
+ * first step is the break, so its dot is amber and the line leaving it is
+ * dashed — the visual claim is "this is where it snaps".
+ *
+ * Pseudo-elements, so the markup stays a plain <ol> a screen reader can read in
+ * order.
+ */
+.chain {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+
+.chain-step {
+  position: relative;
+  padding: 0 0 1.1rem 1.5rem;
+  font-size: 0.97rem;
+}
+
+.chain-step::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 0.55em;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--rule);
+}
+
+.chain-step::after {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 1.3em;
+  bottom: -0.1em;
+  width: 1px;
+  background: var(--rule);
+}
+
+.chain-step:last-child {
+  padding-bottom: 0;
+}
+
+.chain-step:last-child::after {
+  display: none;
+}
+
+.chain-step--break {
+  color: var(--break);
+}
+
+.chain-step--break::before {
+  background: var(--break);
+}
+
+.chain-step--break::after {
+  background: repeating-linear-gradient(to bottom, var(--break) 0 3px, transparent 3px 7px);
 }
