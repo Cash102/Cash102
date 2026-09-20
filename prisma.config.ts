@@ -16,3 +16,10 @@ export default defineConfig({
     seed: "tsx prisma/seed.ts",
   },
 });
+
+// Not worth retrying: the CLI can also take a driver adapter here, which would
+// let `migrate deploy` run on a network that blocks 5432. PrismaNeon 6.16
+// implements connect() but not connectToShadowDb(), so it is not the
+// migration-aware factory this expects and defineConfig drops it silently —
+// the CLI then dials 5432 anyway and fails with P1001. `npm run db:migrate:https`
+// applies migrations over Neon's SQL-over-HTTP endpoint instead.

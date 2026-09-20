@@ -2,6 +2,7 @@ import type { Subject } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { ResumeBanner } from "@/components/resume-banner";
 import { startAttempt } from "./actions";
+import { VariantField } from "@/components/variant-field";
 
 // Reads the catalog per request; nothing here is safe to prerender at build.
 export const dynamic = "force-dynamic";
@@ -67,6 +68,7 @@ export default async function CheckPage() {
                 {subjectCourses.map((course) => (
                   <form key={course.code} action={startAttempt}>
                     <input type="hidden" name="courseCode" value={course.code} />
+                    <VariantField />
                     <button
                       type="submit"
                       className="min-h-14 w-full rounded-sm border border-rule px-4 py-4 text-left text-base hover:border-dust focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hold"

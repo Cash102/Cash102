@@ -47,13 +47,13 @@ export async function POST(
 
   const attempt = await prisma.attempt.findUnique({
     where: { id: params.attemptId },
-    select: { id: true, courseCode: true, completedAt: true },
+    select: { id: true, courseCode: true, variant: true, completedAt: true },
   });
   if (attempt === null) {
     return NextResponse.json({ error: "No such attempt." }, { status: 404 });
   }
 
-  const served = await servedQuestionIds(attempt.id, attempt.courseCode);
+  const served = await servedQuestionIds(attempt);
   if (!served.includes(body.questionId)) {
     return NextResponse.json({ error: "That question is not part of this check." }, { status: 409 });
   }

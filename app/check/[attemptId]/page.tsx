@@ -13,17 +13,24 @@ export const dynamic = "force-dynamic";
  * the few extra kilobytes of markup.
  *
  * Reopening this URL resumes: the served list is deterministic in the attempt
- * id, so we subtract what is already answered and hand the runner the rest.
+ * ROW — its id and its variant — so we subtract what is already answered and
+ * hand the runner the rest.
  */
 export default async function AttemptPage({ params }: { params: { attemptId: string } }) {
   const attempt = await prisma.attempt.findUnique({
     where: { id: params.attemptId },
-    select: { id: true, courseCode: true, completedAt: true, course: { select: { title: true } } },
+    select: {
+      id: true,
+      courseCode: true,
+      variant: true,
+      completedAt: true,
+      course: { select: { title: true } },
+    },
   });
   if (attempt === null) notFound();
   if (attempt.completedAt !== null) redirect(`/report/${attempt.id}`);
 
-  const served = await servedQuestions(attempt.id, attempt.courseCode);
+  const served = await servedQuestions(attempt);
   if (served.length === 0) notFound();
 
   const answered = await prisma.attemptAnswer.findMany({
@@ -48,6 +55,7 @@ export default async function AttemptPage({ params }: { params: { attemptId: str
       <Runner
         attemptId={attempt.id}
         courseTitle={attempt.course.title}
+        variant={attempt.variant}
         total={served.length}
         answeredBefore={served.length - remaining.length}
         questions={remaining.map((question) => ({

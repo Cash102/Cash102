@@ -55,6 +55,7 @@ export async function buildReport(attemptId: string): Promise<Report | null> {
     select: {
       id: true,
       courseCode: true,
+      variant: true,
       completedAt: true,
       course: { select: { title: true } },
       answers: {
@@ -84,7 +85,7 @@ export async function buildReport(attemptId: string): Promise<Report | null> {
   // Only needed to say "9 of 14" on an unfinished check.
   const total =
     attempt.completedAt === null
-      ? (await servedQuestionIds(attempt.id, attempt.courseCode)).length
+      ? (await servedQuestionIds(attempt)).length
       : attempt.answers.length;
 
   if (tally.size === 0) {

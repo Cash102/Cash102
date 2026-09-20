@@ -2,9 +2,10 @@
   "name": "prereq-gap-finder",
   "version": "0.1.0",
   "private": true,
-  "description": "Prerequisite gap finder for HSLA — schema and seed only, no app yet.",
+  "description": "Prerequisite gap finder for HSLA \u2014 schema and seed only, no app yet.",
   "scripts": {
     "db:migrate": "prisma migrate dev",
+    "db:migrate:https": "tsx --tsconfig tsconfig.scripts.json scripts/migrate-over-https.mts",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",

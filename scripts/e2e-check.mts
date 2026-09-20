@@ -15,6 +15,7 @@
  *   - reloading mid-check resumes instead of restarting
  *   - a second tab is offered the in-progress attempt
  *   - the last answer redirects to the report, and a completed attempt stays there
+ *   - a retake asks for the other variant and repeats nothing from the first
  */
 
 import { existsSync } from "node:fs";
@@ -156,9 +157,50 @@ await page.goto(`${BASE}/check/${attemptId}`, { waitUntil: "networkidle" });
 check(page.url().endsWith(`/report/${attemptId}`), "a completed attempt cannot be retaken");
 
 const answers = await prisma.attemptAnswer.count({ where: { attemptId } });
-const attempt = await prisma.attempt.findUniqueOrThrow({ where: { id: attemptId }, select: { completedAt: true } });
+const attempt = await prisma.attempt.findUniqueOrThrow({
+  where: { id: attemptId },
+  select: { completedAt: true, variant: true },
+});
 check(answers === seen.length, "every answer persisted", `(${answers})`);
 check(attempt.completedAt !== null, "completedAt set on the final answer");
+
+// ---------------------------------------------------------------------------
+// Retake. The browser is carrying the finished attempt in localStorage, so
+// picking the same course again should ask for the other half of every pool.
+// This drives the whole chain — localStorage, the hidden field, the action's
+// clamp, the column, the selection — rather than testing the selection alone.
+// ---------------------------------------------------------------------------
+await page.goto(`${BASE}/check`, { waitUntil: "networkidle" });
+const retakeButtons = page.locator("form button[type=submit]");
+await retakeButtons.nth(mathFirst === -1 ? 0 : mathFirst).click();
+await page.waitForURL(/\/check\/.+/);
+const retakeId = page.url().split("/").pop() ?? "";
+check(retakeId !== attemptId, "a retake is a new attempt", retakeId.slice(0, 8));
+
+const retakeSeen: string[] = [];
+for (let step = 0; ; step++) {
+  const card = page.locator("[data-question-id]").first();
+  if ((await card.count()) === 0) break;
+  await card.waitFor({ state: "visible" });
+  retakeSeen.push((await card.getAttribute("data-question-id")) ?? "");
+  await card.locator(".grid button").nth(step % 4).click();
+  await page.waitForTimeout(200);
+  if (/\/report\//.test(page.url())) break;
+}
+
+const retake = await prisma.attempt.findUniqueOrThrow({
+  where: { id: retakeId },
+  select: { variant: true },
+});
+check(retake.variant !== attempt.variant, "the retake asks for the other variant",
+  `(${attempt.variant} then ${retake.variant})`);
+
+const firstPaper = new Set(seen);
+const repeated = retakeSeen.filter((id) => firstPaper.has(id));
+check(repeated.length === 0, "a retake repeats nothing from the first attempt",
+  `(${repeated.length} of ${retakeSeen.length} repeated)`);
+check(retakeSeen.length === seen.length, "the retake is the same length",
+  `(${retakeSeen.length} vs ${seen.length})`);
 
 await browser.close();
 await prisma.$disconnect();

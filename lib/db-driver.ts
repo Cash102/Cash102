@@ -27,7 +27,8 @@ export function createPrismaClient(): PrismaClient {
   return adapter === undefined ? new PrismaClient() : new PrismaClient({ adapter });
 }
 
-function neonAdapter(): PrismaNeon | undefined {
+/** Exported for prisma.config.ts, which needs the adapter itself rather than a client. */
+export function neonAdapter(): PrismaNeon | undefined {
   if (process.env.DB_OVER_HTTPS !== "1") return undefined;
 
   const connectionString = process.env.DATABASE_URL;

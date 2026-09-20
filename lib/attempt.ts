@@ -10,8 +10,23 @@ import { selectQuestions, shuffle, type SkillPool } from "@/lib/select-questions
 
 export const QUESTIONS_PER_ATTEMPT = 14;
 
-/** The question ids this attempt serves, in order. Deterministic in the id. */
-export async function servedQuestionIds(attemptId: string, courseCode: string): Promise<string[]> {
+/**
+ * The parts of an Attempt row that decide what it serves.
+ *
+ * Passed as a row rather than an id so `variant` cannot be forgotten at a call
+ * site: forgetting it would recompute a variant-1 attempt as variant 0, which
+ * means a different paper, which means resume silently breaks and the answer
+ * endpoint starts rejecting the student's own questions.
+ */
+export interface AttemptSelection {
+  id: string;
+  courseCode: string;
+  variant: number;
+}
+
+/** The question ids this attempt serves, in order. Deterministic in the row. */
+export async function servedQuestionIds(attempt: AttemptSelection): Promise<string[]> {
+  const { id: attemptId, courseCode, variant } = attempt;
   const links = await prisma.courseSkill.findMany({
     where: { courseCode, skill: { active: true } },
     select: {
@@ -27,7 +42,7 @@ export async function servedQuestionIds(attemptId: string, courseCode: string): 
     questionIds: link.skill.questions.map((question) => question.id),
   }));
 
-  return selectQuestions(pools, { seed: attemptId, target: QUESTIONS_PER_ATTEMPT });
+  return selectQuestions(pools, { seed: attemptId, variant, target: QUESTIONS_PER_ATTEMPT });
 }
 
 export interface ServedOption {
@@ -53,8 +68,9 @@ export interface ServedQuestion {
  * cannot leak it either. Seeding the shuffle per attempt+question means a
  * reload redraws the same order instead of scrambling under the student.
  */
-export async function servedQuestions(attemptId: string, courseCode: string): Promise<ServedQuestion[]> {
-  const ids = await servedQuestionIds(attemptId, courseCode);
+export async function servedQuestions(attempt: AttemptSelection): Promise<ServedQuestion[]> {
+  const attemptId = attempt.id;
+  const ids = await servedQuestionIds(attempt);
   if (ids.length === 0) return [];
 
   const questions = await prisma.question.findMany({

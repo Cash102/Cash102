@@ -20,6 +20,8 @@ export interface RunnerQuestion {
 interface RunnerProps {
   attemptId: string;
   courseTitle: string;
+  /** Which half of the pool this paper came from; kept so the next check differs. */
+  variant: number;
   /** Questions in this attempt, including ones already answered. */
   total: number;
   /** How many were answered before this page load, i.e. how far a resume is in. */
@@ -34,7 +36,7 @@ interface SentAnswer {
   elapsedMs: number;
 }
 
-export function Runner({ attemptId, courseTitle, total, answeredBefore, questions }: RunnerProps) {
+export function Runner({ attemptId, courseTitle, variant, total, answeredBefore, questions }: RunnerProps) {
   const router = useRouter();
   const [cursor, setCursor] = useState(0);
   const [status, setStatus] = useState<"asking" | "finishing" | "failed">("asking");
@@ -46,8 +48,8 @@ export function Runner({ attemptId, courseTitle, total, answeredBefore, question
   const firstOption = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
-    writeAttempt({ id: attemptId, courseTitle });
-  }, [attemptId, courseTitle]);
+    writeAttempt({ id: attemptId, courseTitle, variant });
+  }, [attemptId, courseTitle, variant]);
 
   useEffect(() => {
     askedAt.current = Date.now();
@@ -84,9 +86,9 @@ export function Runner({ attemptId, courseTitle, total, answeredBefore, question
       setStatus("failed");
       return;
     }
-    markCompleted(attemptId, courseTitle);
+    markCompleted(attemptId, courseTitle, variant);
     router.replace(`/report/${attemptId}`);
-  }, [attemptId, courseTitle, router]);
+  }, [attemptId, courseTitle, variant, router]);
 
   const retry = useCallback(async () => {
     setStatus("finishing");

@@ -18,11 +18,12 @@ No auth, and no student identity anywhere.
 ```bash
 npm run dev             # local development
 npm run db:migrate      # prisma migrate dev
+npm run db:migrate:https # same migrations, over HTTPS, where 5432 is blocked
 npm run db:seed         # idempotent; run it as often as you like
 npm run typecheck
 npm run verify:stems    # renders all seeded stems, compares against KaTeX
 npm run verify:flow     # drives /check in a browser; see "Verification" below
-npm run audit:courses   # per course: questions served, and measured retake overlap
+npm run audit:courses   # per course: questions served, and both overlap numbers
 ```
 
 Two environment variables, both required (`.env`, gitignored; see
@@ -98,11 +99,14 @@ authoring scale.
    `npm run verify:stems` guards the KaTeX coupling on upgrade.
    `CourseSkill.chain` is the exception: plain text, NOT stem notation.
 
-3. **Question selection is deterministic in the attempt id**
-   (`lib/select-questions.ts`). That is what makes resume work without an
-   `AttemptQuestion` table: reopening recomputes the identical list and subtracts
-   what is answered. If you add per-attempt randomness, resume breaks. Add the
-   table instead.
+3. **Question selection is deterministic in the attempt ROW** — its id and its
+   `variant` (`lib/select-questions.ts`). That is what makes resume work without
+   an `AttemptQuestion` table: reopening recomputes the identical list and
+   subtracts what is answered. If you add per-attempt randomness, resume breaks.
+   Add the table instead. This is also why `servedQuestionIds` takes a row and
+   not an id: passing an id alone would silently recompute a variant-1 attempt
+   as variant 0, which serves a different paper, which breaks resume and makes
+   the answer endpoint reject the student's own questions.
 
 4. **The client never receives an answer key.** Options are shuffled on the
    server, seeded per attempt+question; `isCorrect` is not in the payload;
@@ -116,6 +120,14 @@ authoring scale.
    identifies a person: treat every proposed column on that model as
    re-identification risk first and a feature second. For teacher dashboards,
    write aggregate rollups, not a student FK.
+
+   `variant` is the one column added since, and it is the shape this rule asks
+   for. Retake variety needs the database to know something about the student's
+   previous attempt; the obvious `previousAttemptId` would have chained one
+   student's checks together across courses and dates, which is a sharper
+   identifier than any single row. An integer that says "second paper" instead
+   of "second paper BY THE PERSON WHO SAT attempt X" buys the same behaviour
+   and links nothing. Keep that bar for the next column.
 
 6. **`SkillDependency` must stay acyclic.** The seed asserts it with a
    three-colour DFS. A cycle makes the remediation order meaningless and hangs
@@ -166,7 +178,10 @@ npm run build && npm start        # in one terminal
 npm run verify:flow               # in another
 ```
 
-It asserts, among other things, that **each stem renders only its own content**.
+It asserts, among other things, that **each stem renders only its own content**
+and that **a retake repeats nothing** — the second drives localStorage, the
+hidden field, the action's clamp and the column, not just the selection
+function.
 That is a regression test for a real bug: without `key={question.id}` on the
 question subtree, React reconciles one stem's KaTeX elements into the next
 question's slot and two questions render at once.
@@ -177,12 +192,19 @@ Done: schema and migration; seed (27 courses, 8 prerequisite edges, 25 canonical
 skills, 96 CourseSkill links, 18 dependency edges, 200 questions, 800 options);
 the `/check` flow; the report.
 
-**Every skill has exactly eight questions.** Keep it that way when adding one:
-a check serves two to four per skill, so a pool of four meant a student who
-retook it saw almost the same paper. `npm run audit:courses` measures the
-overlap rather than assuming it — two different attempts at a four-skill course
-now share about 6 of 14 questions, and at a seven- or eight-skill course about
-3 of 14. Before the second wave of authoring it was roughly 12 of 14.
+**Every skill has exactly eight questions, and that number is now load-bearing.**
+A check serves at most four questions of any one skill, so eight is what lets
+the pool split into two disjoint halves. `Attempt.variant` picks the half, the
+browser rotates it 0, 1, 0, 1 across a student's checks, and the partition is
+seeded by the skill rather than the attempt — which is what makes the two halves
+genuinely disjoint instead of two shuffles that happen to differ. A retake
+therefore repeats **nothing**: `npm run audit:courses` measures 0.0 of 14 on
+every course, and `verify:flow` drives an actual second attempt in the browser
+and asserts it. Before any of this it was roughly 12 of 14.
+
+Drop a skill below eight questions and it quietly loses the guarantee: its half
+would be too small to fill a check, so `poolForVariant` hands back the whole
+pool for that skill instead of running short.
 
 **All 21 offered courses have a live check**, every one serving 12 to 14
 questions (`npm run audit:courses` prints the table). Most cost no questions at
@@ -228,15 +250,25 @@ Also open:
   courses now lean on that skill, so the case for images keeps getting stronger.
 - **A teacher submission form.** Whatever writes questions must go through
   `assertValidStem` — that is the whole contract in invariant 2.
-- **Retake variety, the rest of the way.** Overlap is now roughly
-  `served / pool`, which is arithmetic rather than a bug: a four-skill course
-  serves 14 of 32. Two ways further down, if it matters — more questions per
-  skill (twelve each would put it near 29 percent), or excluding what the
-  student saw last time. The second is cheaper and better: the client already
-  holds the previous attempt id in localStorage, so `startAttempt` could record
-  it on the new `Attempt` row and the selection could skip those questions.
-  That keeps invariant 3 intact — selection stays deterministic given the row —
-  but it needs a column and a migration, so it is a decision, not a tweak.
+- **Classmate variety is what the variant split cost.** Retakes now repeat
+  nothing (see below), but the price is that two students sitting a four-skill
+  check at the same time share about 12.5 of 14 questions, where they used to
+  share about 6. `npm run audit:courses` prints both numbers side by side so
+  the trade stays visible rather than becoming folklore.
+
+  It is arithmetic again, not a bug. A four-skill course serves 14 questions and
+  its half of the pool holds 16, so there are two spare questions to differ by;
+  Microeconomics serves 12 from a half of exactly 12 and every student gets the
+  identical paper. Twelve questions per skill would give a half of 24 and put it
+  near 57 percent. That is the same authoring lever as before, and it is now the
+  only one left — no scheduling trick fixes a pool that is barely larger than
+  the check.
+
+  Worth knowing: this is a mild problem for this product specifically. The check
+  is not graded and the output is a diagnosis of your own gaps, so copying a
+  neighbour's answers buys a student a wrong diagnosis rather than a better
+  score. If that ever stops being true — a teacher running it as a class
+  activity, say — revisit it before the pool size.
 - **Not-offered courses.** Six catalog entries are marked not offered for SY
   25-26 and have no links. If any comes back, Statistics and Number Theory reuse
   the maths skills and African American Studies reuses the history ones.

@@ -19,10 +19,45 @@ export interface SkillPool {
 export interface SelectionOptions {
   /** The attempt id. Same seed in, same questions out. */
   seed: string;
+  /** Which half of each skill's pool to draw from. See VARIANTS. */
+  variant?: number;
   /** How many questions to aim for. */
   target?: number;
   /** How many per skill before topping up from the heaviest skills. */
   perSkill?: number;
+}
+
+/**
+ * How many disjoint papers each course can produce.
+ *
+ * Every skill holds eight questions and a check serves at most four of any one
+ * skill, so the pool splits cleanly in two and a retake can be guaranteed to
+ * share nothing with the attempt before it. Two is what the arithmetic allows,
+ * not a preference: raising it needs more questions per skill first.
+ */
+export const VARIANTS = 2;
+
+/**
+ * The slice of one skill's questions a given variant may draw from.
+ *
+ * The partition is seeded by the SKILL, never by the attempt. That is the whole
+ * trick: every attempt cuts the pool the same way, so variant 0 and variant 1
+ * are disjoint sets rather than two arbitrary shuffles that happen to differ.
+ *
+ * A skill with too few questions to split and still fill a check keeps its
+ * whole pool — that attempt loses the guarantee instead of running short.
+ */
+function poolForVariant(
+  questionIds: readonly string[],
+  skillId: string,
+  variant: number,
+  need: number,
+): string[] {
+  const ordered = shuffle(questionIds, `variant-partition:${skillId}`);
+  const size = Math.floor(ordered.length / VARIANTS);
+  if (size < need) return ordered;
+  const start = (((variant % VARIANTS) + VARIANTS) % VARIANTS) * size;
+  return ordered.slice(start, start + size);
 }
 
 /** FNV-1a, for turning a cuid into a number. */
@@ -69,14 +104,20 @@ export function selectQuestions(pools: readonly SkillPool[], options: SelectionO
   const target = options.target ?? 14;
   const perSkill = options.perSkill ?? 2;
   const maxPerSkill = perSkill * 2;
+  const variant = options.variant ?? 0;
 
   const ordered = [...pools]
     .filter((pool) => pool.questionIds.length > 0)
     .sort((a, b) => b.weight - a.weight || a.skillId.localeCompare(b.skillId))
     .map((pool) => ({
       ...pool,
-      // Shuffled per skill so repeat attempts on the same course differ.
-      questionIds: shuffle(pool.questionIds, `${options.seed}:${pool.skillId}`),
+      // The variant picks the half; the seed shuffles within it, so two students
+      // on the same variant still get different orders and, where the half is
+      // bigger than the check needs, different questions.
+      questionIds: shuffle(
+        poolForVariant(pool.questionIds, pool.skillId, variant, maxPerSkill),
+        `${options.seed}:${pool.skillId}`,
+      ),
     }));
 
   const picked: string[] = [];

@@ -305,6 +305,20 @@ model Attempt {
   startedAt   DateTime  @default(now())
   completedAt DateTime?
 
+  /// Which half of each skill's question pool this paper was drawn from.
+  ///
+  /// A student's retakes rotate 0, 1, 0, 1..., and the halves are disjoint, so
+  /// a second attempt at the same course shares no questions with the first.
+  /// The browser holds the counter and sends the next one; the server clamps it.
+  ///
+  /// Deliberately a small integer and NOT a link to the previous attempt. The
+  /// obvious design — previousAttemptId — would chain one student's attempts
+  /// together across courses and dates, and at this school size that chain
+  /// identifies a person far more readily than any single row does. This column
+  /// says "second paper", not "second paper BY THE PERSON WHO SAT attempt X".
+  /// See invariant 5.
+  variant Int @default(0)
+
   answers AttemptAnswer[]
 
   @@index([courseCode, completedAt])
