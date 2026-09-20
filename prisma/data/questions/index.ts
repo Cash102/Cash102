@@ -12,6 +12,8 @@ export type { SeedQuestion, SeedQuestionOption } from "./types";
 
 import type { SeedQuestion } from "./types";
 import { ALGEBRA_QUESTIONS } from "./algebra";
+import { COMPUTING_QUESTIONS } from "./computing";
+import { HISTORY_QUESTIONS } from "./history";
 import { QUANTITATIVE_SCIENCE_QUESTIONS } from "./quantitative-science";
 import { WRITING_QUESTIONS } from "./writing";
 
@@ -19,4 +21,6 @@ export const QUESTIONS: SeedQuestion[] = [
   ...ALGEBRA_QUESTIONS,
   ...QUANTITATIVE_SCIENCE_QUESTIONS,
   ...WRITING_QUESTIONS,
+  ...HISTORY_QUESTIONS,
+  ...COMPUTING_QUESTIONS,
 ];

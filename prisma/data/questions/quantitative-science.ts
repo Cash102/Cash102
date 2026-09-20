@@ -227,4 +227,61 @@ export const QUANTITATIVE_SCIENCE_QUESTIONS: SeedQuestion[] = [
       { text: `No — the chain is ionic and water repels ions`, misconception: "Right answer, wrong mechanism" },
     ],
   },
+
+  // ===== Telling a rate of change apart from a level =====
+  // The distinction AP Macro students lose first and AP Environmental Science
+  // students lose second. Kept here rather than in a course file because both
+  // courses link to the same canonical skill.
+  {
+    id: "q-percent-change-1",
+    skillId: "percent-change-vs-level",
+    prompt:
+      `Inflation falls from 6 percent to 3 percent.` + "\n" +
+      `What happened to prices?`,
+    options: [
+      { text: `They kept rising, only more slowly`, isCorrect: true },
+      { text: `They fell`, misconception: "Read a falling rate as a falling level" },
+      { text: `They stayed where they were`, misconception: "Read a falling rate as no change at all" },
+      { text: `They fell by 3 percent`, misconception: "Subtracted the two rates and applied the result to the level" },
+    ],
+  },
+  {
+    id: "q-percent-change-2",
+    skillId: "percent-change-vs-level",
+    prompt:
+      `A quantity rises by 10 percent, then falls by 10 percent.` + "\n" +
+      `Where does it end up?`,
+    options: [
+      { text: `Slightly below where it started`, isCorrect: true },
+      { text: `Exactly where it started`, misconception: "Added and subtracted percentages as if both applied to the same base" },
+      { text: `Slightly above where it started`, misconception: "Got the direction of the rounding error backwards" },
+      { text: `Twenty percent below where it started`, misconception: "Combined the two changes into one large one" },
+    ],
+  },
+  {
+    id: "q-percent-change-3",
+    skillId: "percent-change-vs-level",
+    prompt:
+      `One company grew 50 percent last year. Another grew 5 percent.` + "\n" +
+      `Which added more customers?`,
+    options: [
+      { text: `There is no way to tell without knowing how big each one was`, isCorrect: true },
+      { text: `The one that grew 50 percent`, misconception: "Compared rates as though the starting sizes matched" },
+      { text: `The one that grew 5 percent`, misconception: "Assumed the smaller rate must belong to the larger company" },
+      { text: `They added the same number`, misconception: "Treated percentages as counts" },
+    ],
+  },
+  {
+    id: "q-percent-change-4",
+    skillId: "percent-change-vs-level",
+    prompt:
+      `Unemployment goes from 4 percent to 6 percent.` + "\n" +
+      `Which description is right?`,
+    options: [
+      { text: `Up 2 percentage points, which is a 50 percent increase`, isCorrect: true },
+      { text: `Up 2 percent`, misconception: "Confused percentage points with percent" },
+      { text: `Up 50 percentage points`, misconception: "Swapped percentage points and percent the other way" },
+      { text: `It doubled`, misconception: "Read a two-point rise as a doubling" },
+    ],
+  },
 ];

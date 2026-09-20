@@ -124,6 +124,45 @@ export const SKILLS: CanonicalSkill[] = [
   { id: "commentary-not-restatement", // was lit-commentary
     name: "Writing commentary instead of restating",
     chainType: "skill", origin: "AP Language and Composition II", originCourseCode: "ELFYLAC2" },
+
+  // ===== History. Skill chains, and the prerequisites UNDER the College =====
+  // Board's historical thinking skills rather than the skills themselves. The
+  // framework says a student must source a document and contextualise it; this
+  // layer is what a student needs before they can. Same relationship the
+  // catalog has to the skill layer everywhere else in this file.
+  // TODO: confirm with an APUSH teacher.
+  { id: "sourcing-a-document",
+    name: "Reading a source for who wrote it and why",
+    chainType: "skill", origin: "Middle school social studies", originCourseCode: null },
+
+  { id: "contextualize-an-event",
+    name: "Placing an event in what surrounded it",
+    chainType: "skill", origin: "Middle school social studies", originCourseCode: null },
+
+  { id: "causation-vs-sequence",
+    name: "Telling a cause apart from what merely came after",
+    chainType: "skill", origin: "Middle school social studies", originCourseCode: null },
+
+  // ===== Computing. Content chains: the arithmetic and logic under CS =====
+  // Principles, which the course itself assumes and does not teach.
+  // TODO: confirm with the CS teacher.
+  { id: "number-bases",
+    name: "Binary and place value",
+    chainType: "content", origin: "Middle school math", originCourseCode: null },
+
+  { id: "boolean-logic",
+    name: "Deciding whether a condition is true",
+    chainType: "content", origin: "Middle school math", originCourseCode: null },
+
+  { id: "trace-a-procedure",
+    name: "Following a written procedure exactly",
+    chainType: "content", origin: "Middle school math", originCourseCode: null },
+
+  // ===== Economics and data. The distinction every econ student loses. =====
+  // TODO: confirm with the AP Macro teacher.
+  { id: "percent-change-vs-level",
+    name: "Telling a rate of change apart from a level",
+    chainType: "content", origin: "Middle school math", originCourseCode: null },
 ];
 
 // ---------------------------------------------------------------------------
@@ -287,6 +326,319 @@ export const COURSE_SKILLS: CourseSkillLink[] = [
             "Solve a quadratic kinematics equation for the time",
             "Choose the root that physically happened"],
     practiceQuery: "factoring quadratics" },
+
+  // ===== AP PRECALCULUS — the earliest place this check can catch anyone =====
+  // Ninth grade, and the first math course in the building. Every skill it
+  // leans on has a null origin course: this is the exact point where the
+  // missing algebra year becomes the school's problem, one year before
+  // Calculus makes it the student's.
+  { courseCode: "MPFYHAR", skillId: "factoring-quadratics", weight: 5,
+    chain: ["Factor a quadratic into two binomials",
+            "Find the zeros of a polynomial function",
+            "Sketch a polynomial from its factors"],
+    practiceQuery: "factoring quadratics" },
+
+  { courseCode: "MPFYHAR", skillId: "substitute-value", weight: 5,
+    chain: ["Substitute carefully, signs and exponents included",
+            "Evaluate a function at a given input",
+            "Read function notation without guessing at it"],
+    practiceQuery: "evaluating expressions substitution" },
+
+  { courseCode: "MPFYHAR", skillId: "solve-for-constant", weight: 4,
+    chain: ["Solve an equation for a letter that isn't x",
+            "Find the parameter that makes a function pass through a point",
+            "Build a function to fit a described condition"],
+    practiceQuery: "solving equations for a variable" },
+
+  { courseCode: "MPFYHAR", skillId: "strict-vs-inclusive-inequalities", weight: 4,
+    chain: ["Tell < apart from ≤ in a domain",
+            "Write the domain of a piecewise function",
+            "Say where a function is and is not defined"],
+    practiceQuery: "inequalities and interval notation" },
+
+  { courseCode: "MPFYHAR", skillId: "set-expressions-equal", weight: 3,
+    chain: ["Set expression A equal to expression B",
+            "Find where two functions meet",
+            "Solve intersection and system problems"],
+    practiceQuery: "setting up equations" },
+
+  // ===== AP CALCULUS BC II — integral calculus =====
+  { courseCode: "MCFYHAR2", skillId: "factoring-quadratics", weight: 5,
+    chain: ["Factor a quadratic into two binomials",
+            "Split a rational function into partial fractions",
+            "Integrate a rational function"],
+    practiceQuery: "factoring quadratics" },
+
+  { courseCode: "MCFYHAR2", skillId: "simplify-rational-expressions", weight: 5,
+    chain: ["Cancel a common factor from top and bottom",
+            "Reduce an integrand before integrating it",
+            "Recognize an integral you already know how to do"],
+    practiceQuery: "simplifying rational expressions" },
+
+  { courseCode: "MCFYHAR2", skillId: "substitute-value", weight: 4,
+    chain: ["Substitute carefully, signs and exponents included",
+            "Evaluate an antiderivative at both limits",
+            "Apply the Fundamental Theorem without sign errors"],
+    practiceQuery: "evaluating expressions substitution" },
+
+  { courseCode: "MCFYHAR2", skillId: "solve-for-constant", weight: 3,
+    chain: ["Solve an equation for a letter that isn't x",
+            "Find the constant of integration from a starting value",
+            "Solve a differential equation with an initial condition"],
+    practiceQuery: "solving equations for a variable" },
+
+  // ===== AP LITERATURE II — the same four skills, a year later =====
+  { courseCode: "ELFYLIT2", skillId: "claim-vs-summary", weight: 5,
+    chain: ["Recognize when a sentence argues vs. when it just reports",
+            "Write about an unfamiliar text without retelling it",
+            "Score above the summary ceiling on the AP Lit essay rubric"],
+    practiceQuery: "claim versus summary thesis writing" },
+
+  { courseCode: "ELFYLIT2", skillId: "defensible-thesis", weight: 5,
+    chain: ["State a position someone could reasonably disagree with",
+            "Hold one position across a longer and stranger text",
+            "Earn the thesis point on the AP Lit rubric"],
+    practiceQuery: "how to write a defensible thesis" },
+
+  { courseCode: "ELFYLIT2", skillId: "integrate-evidence", weight: 4,
+    chain: ["Choose a quote that actually supports the claim",
+            "Work with a translation, where the wording is not the author's",
+            "Earn evidence and commentary points"],
+    practiceQuery: "integrating textual evidence quotes" },
+
+  { courseCode: "ELFYLIT2", skillId: "commentary-not-restatement", weight: 5,
+    chain: ["Explain how the evidence proves the claim",
+            "Connect a device to its effect on meaning",
+            "Move from a 3 to a 5 or 6 on the AP Lit essay rubric"],
+    practiceQuery: "literary analysis commentary vs summary" },
+
+  // ===== AP US HISTORY I — three history skills and three writing ones =====
+  // The writing skills are the SAME ROWS AP Lit uses. A student shaky on claim
+  // versus summary is shaky in both rooms, and now hears so in both, off one
+  // set of questions.
+  { courseCode: "HUFYHAR1", skillId: "sourcing-a-document", weight: 5,
+    chain: ["Ask who wrote a source and what they wanted from it",
+            "Say what that does to what the source can be used for",
+            "Earn the sourcing point on a document-based question"],
+    practiceQuery: "analyzing primary sources point of view" },
+
+  { courseCode: "HUFYHAR1", skillId: "contextualize-an-event", weight: 5,
+    chain: ["Say what else was going on at the time",
+            "Place a document in the moment that produced it",
+            "Earn the contextualization point"],
+    practiceQuery: "historical contextualization" },
+
+  { courseCode: "HUFYHAR1", skillId: "causation-vs-sequence", weight: 4,
+    chain: ["Tell a cause apart from what merely came after",
+            "Explain why a development happened, not only when",
+            "Answer a causation prompt instead of narrating"],
+    practiceQuery: "correlation versus causation history" },
+
+  { courseCode: "HUFYHAR1", skillId: "claim-vs-summary", weight: 5,
+    chain: ["Recognize when a sentence argues vs. when it just reports",
+            "Write body paragraphs that advance an argument",
+            "Stop narrating the period and start arguing about it"],
+    practiceQuery: "claim versus summary thesis writing" },
+
+  { courseCode: "HUFYHAR1", skillId: "defensible-thesis", weight: 5,
+    chain: ["State a position someone could reasonably disagree with",
+            "Answer the verb the prompt actually asked",
+            "Earn the thesis point on the long essay"],
+    practiceQuery: "how to write a defensible thesis" },
+
+  { courseCode: "HUFYHAR1", skillId: "integrate-evidence", weight: 4,
+    chain: ["Choose evidence that actually supports the claim",
+            "Use a document rather than quoting it",
+            "Earn the evidence and analysis points"],
+    practiceQuery: "using evidence in historical writing" },
+
+  // ===== AP US HISTORY II — exam year, so argument carries more =====
+  { courseCode: "HUFYHAR2", skillId: "sourcing-a-document", weight: 5,
+    chain: ["Ask who wrote a source and what they wanted from it",
+            "Weigh two sources that disagree",
+            "Earn sourcing across all seven documents"],
+    practiceQuery: "analyzing primary sources point of view" },
+
+  { courseCode: "HUFYHAR2", skillId: "contextualize-an-event", weight: 4,
+    chain: ["Say what else was going on at the time",
+            "Connect a period to the one before it",
+            "Earn the contextualization point under time pressure"],
+    practiceQuery: "historical contextualization" },
+
+  { courseCode: "HUFYHAR2", skillId: "causation-vs-sequence", weight: 5,
+    chain: ["Tell a cause apart from what merely came after",
+            "Argue a cause rather than list a chronology",
+            "Answer causation and change-over-time prompts"],
+    practiceQuery: "correlation versus causation history" },
+
+  { courseCode: "HUFYHAR2", skillId: "claim-vs-summary", weight: 5,
+    chain: ["Recognize when a sentence argues vs. when it just reports",
+            "Write body paragraphs that advance an argument",
+            "Clear the narration ceiling on the DBQ"],
+    practiceQuery: "claim versus summary thesis writing" },
+
+  { courseCode: "HUFYHAR2", skillId: "defensible-thesis", weight: 5,
+    chain: ["State a position someone could reasonably disagree with",
+            "Hold that position across seven documents",
+            "Earn the thesis and complexity points"],
+    practiceQuery: "how to write a defensible thesis" },
+
+  { courseCode: "HUFYHAR2", skillId: "integrate-evidence", weight: 5,
+    chain: ["Choose evidence that actually supports the claim",
+            "Use six documents plus outside evidence",
+            "Earn the full evidence band on the DBQ"],
+    practiceQuery: "using evidence in historical writing" },
+
+  // ===== AP EUROPEAN HISTORY — same six skills, different century =====
+  { courseCode: "HRFYHAR", skillId: "sourcing-a-document", weight: 5,
+    chain: ["Ask who wrote a source and what they wanted from it",
+            "Read a source from a society unlike your own",
+            "Earn the sourcing point on a document-based question"],
+    practiceQuery: "analyzing primary sources point of view" },
+
+  { courseCode: "HRFYHAR", skillId: "contextualize-an-event", weight: 5,
+    chain: ["Say what else was going on at the time",
+            "Place a movement in the century that produced it",
+            "Earn the contextualization point"],
+    practiceQuery: "historical contextualization" },
+
+  { courseCode: "HRFYHAR", skillId: "causation-vs-sequence", weight: 4,
+    chain: ["Tell a cause apart from what merely came after",
+            "Explain why a revolution happened, not only when",
+            "Answer a causation prompt instead of narrating"],
+    practiceQuery: "correlation versus causation history" },
+
+  { courseCode: "HRFYHAR", skillId: "defensible-thesis", weight: 5,
+    chain: ["State a position someone could reasonably disagree with",
+            "Answer the verb the prompt actually asked",
+            "Earn the thesis point on the long essay"],
+    practiceQuery: "how to write a defensible thesis" },
+
+  // ===== AP MACROECONOMICS =====
+  { courseCode: "HEFYHAR1", skillId: "percent-change-vs-level", weight: 5,
+    chain: ["Tell a rate of change apart from a level",
+            "Say what falling inflation actually does to prices",
+            "Read growth, unemployment and inflation data correctly"],
+    practiceQuery: "percent change versus level rate of change" },
+
+  { courseCode: "HEFYHAR1", skillId: "read-graphs", weight: 5,
+    chain: ["Read axes, units, and scale correctly",
+            "Tell a movement along a curve from a shift of the curve",
+            "Work supply and demand and AD-AS problems"],
+    practiceQuery: "interpreting graphs economics" },
+
+  { courseCode: "HEFYHAR1", skillId: "ratios-and-proportions", weight: 4,
+    chain: ["Set up and solve a proportion",
+            "Get a real value from a nominal one",
+            "Work index, multiplier and rate problems"],
+    practiceQuery: "ratios and proportions" },
+
+  // ===== AP MICROECONOMICS =====
+  { courseCode: "HEFYHAR2", skillId: "read-graphs", weight: 5,
+    chain: ["Read axes, units, and scale correctly",
+            "Tell a movement along a curve from a shift of the curve",
+            "Work elasticity and market structure graphs"],
+    practiceQuery: "interpreting graphs economics" },
+
+  { courseCode: "HEFYHAR2", skillId: "ratios-and-proportions", weight: 5,
+    chain: ["Set up and solve a proportion",
+            "Compute elasticity as one percent change over another",
+            "Compare marginal cost and marginal revenue"],
+    practiceQuery: "ratios and proportions" },
+
+  { courseCode: "HEFYHAR2", skillId: "percent-change-vs-level", weight: 4,
+    chain: ["Tell a rate of change apart from a level",
+            "Read what a percent change in price does to quantity",
+            "Interpret elasticity without inverting it"],
+    practiceQuery: "percent change versus level rate of change" },
+
+  // ===== AP ENVIRONMENTAL SCIENCE — ninth grade, entirely reused =====
+  { courseCode: "SEFYHAR", skillId: "ratios-and-proportions", weight: 5,
+    chain: ["Set up and solve a proportion",
+            "Scale a rate up to a population or an area",
+            "Work carrying capacity and consumption problems"],
+    practiceQuery: "ratios and proportions" },
+
+  { courseCode: "SEFYHAR", skillId: "read-graphs", weight: 5,
+    chain: ["Read axes, units, and scale correctly",
+            "Describe a trend and name the controlled variable",
+            "Analyze data in the free response questions"],
+    practiceQuery: "interpreting graphs science" },
+
+  { courseCode: "SEFYHAR", skillId: "scientific-notation", weight: 4,
+    chain: ["Convert between units and powers of ten",
+            "Carry units through a multi-step calculation",
+            "Complete the quantitative free response question"],
+    practiceQuery: "scientific notation unit conversion" },
+
+  { courseCode: "SEFYHAR", skillId: "percent-change-vs-level", weight: 3,
+    chain: ["Tell a rate of change apart from a level",
+            "Say what a falling growth rate does to a population",
+            "Reason about exponential growth and doubling time"],
+    practiceQuery: "percent change versus level rate of change" },
+
+  // ===== AP COMPUTER SCIENCE PRINCIPLES =====
+  { courseCode: "SSFYHAR", skillId: "boolean-logic", weight: 5,
+    chain: ["Say whether a condition is true or false",
+            "Predict which branch of an if statement runs",
+            "Trace and debug conditional logic"],
+    practiceQuery: "boolean logic and or not truth tables" },
+
+  { courseCode: "SSFYHAR", skillId: "trace-a-procedure", weight: 5,
+    chain: ["Follow a written procedure exactly, step by step",
+            "Say what a loop has left behind when it finishes",
+            "Predict the output of a program you did not write"],
+    practiceQuery: "tracing algorithms step by step" },
+
+  { courseCode: "SSFYHAR", skillId: "number-bases", weight: 4,
+    chain: ["Read a number written in binary",
+            "Say how many values a given number of bits can hold",
+            "Reason about data, storage and overflow"],
+    practiceQuery: "binary number system place value" },
+
+  // ===== AP COMPUTER SCIENCE A =====
+  { courseCode: "SSFYHAR2", skillId: "trace-a-procedure", weight: 5,
+    chain: ["Follow a written procedure exactly, step by step",
+            "Hand-trace a loop over an array",
+            "Answer code-tracing questions without running the code"],
+    practiceQuery: "tracing algorithms step by step" },
+
+  { courseCode: "SSFYHAR2", skillId: "boolean-logic", weight: 5,
+    chain: ["Say whether a condition is true or false",
+            "Write a compound condition that means what you intend",
+            "Debug an off-by-one or inverted condition"],
+    practiceQuery: "boolean logic and or not truth tables" },
+
+  { courseCode: "SSFYHAR2", skillId: "substitute-value", weight: 3,
+    chain: ["Substitute carefully, signs and exponents included",
+            "Evaluate an expression the way the machine will",
+            "Predict what a variable holds after assignment"],
+    practiceQuery: "evaluating expressions substitution" },
+
+  { courseCode: "SSFYHAR2", skillId: "number-bases", weight: 3,
+    chain: ["Read a number written in binary",
+            "Reason about integer limits and overflow",
+            "Explain why a large int wraps around"],
+    practiceQuery: "binary number system place value" },
+
+  // ===== AP PSYCHOLOGY — research methods are quantitative =====
+  { courseCode: "SYFYHAR", skillId: "read-graphs", weight: 5,
+    chain: ["Read axes, units, and scale correctly",
+            "Tell an experiment apart from a correlation in a figure",
+            "Interpret research findings in the free response"],
+    practiceQuery: "interpreting graphs science" },
+
+  { courseCode: "SYFYHAR", skillId: "ratios-and-proportions", weight: 4,
+    chain: ["Set up and solve a proportion",
+            "Read a percentage of a sample correctly",
+            "Interpret study results without overstating them"],
+    practiceQuery: "ratios and proportions" },
+
+  { courseCode: "SYFYHAR", skillId: "causation-vs-sequence", weight: 4,
+    chain: ["Tell a cause apart from what merely came after",
+            "Say why a correlation does not establish a cause",
+            "Evaluate whether a study supports its own conclusion"],
+    practiceQuery: "correlation versus causation research" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -351,4 +703,21 @@ export const SKILL_DEPENDENCIES: SkillEdge[] = [
   // by weight.
   { prerequisiteId: "scientific-notation", dependentId: "read-graphs", strength: 3,
     rationale: "An axis labelled in powers of ten is unreadable to a student for whom powers of ten are unreadable." },
+
+  { prerequisiteId: "percent-change-vs-level", dependentId: "read-graphs", strength: 3,
+    rationale: "A curve of a rate and a curve of a level look identical and mean opposite things." },
+
+  // ===== HISTORY =====
+  { prerequisiteId: "contextualize-an-event", dependentId: "causation-vs-sequence", strength: 3,
+    rationale: "You cannot say what caused something without knowing what else was going on at the time." },
+
+  { prerequisiteId: "causation-vs-sequence", dependentId: "defensible-thesis", strength: 4,
+    rationale: "A historical thesis almost always claims a cause. Without the distinction it claims a sequence and calls that an argument." },
+
+  { prerequisiteId: "sourcing-a-document", dependentId: "integrate-evidence", strength: 3,
+    rationale: "A document cannot be used as evidence responsibly until you know who made it and what they wanted." },
+
+  // ===== COMPUTING =====
+  { prerequisiteId: "boolean-logic", dependentId: "trace-a-procedure", strength: 4,
+    rationale: "Tracing a branch means deciding whether its condition is true, one line at a time." },
 ];

@@ -13,7 +13,8 @@
     "build": "next build",
     "start": "next start",
     "verify:stems": "tsx --tsconfig tsconfig.scripts.json scripts/verify-stems.tsx",
-    "verify:flow": "tsx --tsconfig tsconfig.scripts.json scripts/e2e-check.mts"
+    "verify:flow": "tsx --tsconfig tsconfig.scripts.json scripts/e2e-check.mts",
+    "audit:courses": "tsx --tsconfig tsconfig.scripts.json scripts/audit-courses.mts"
   },
   "dependencies": {
     "@prisma/client": "^6.16.2",

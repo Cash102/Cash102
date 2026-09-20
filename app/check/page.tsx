@@ -40,8 +40,8 @@ export default async function CheckPage() {
         You are probably not bad at the class you are failing.
       </h1>
       <p className="mb-6 text-dust">
-        Something earlier is more likely broken. Fourteen questions, none of them from the course
-        itself, to find which one.
+        Something earlier is more likely broken. Twelve to fourteen questions, none of them from
+        the course itself, to find which one.
       </p>
       <div className="mb-7 border-t border-rule pt-4 font-sans text-xs text-dust">
         Anonymous. No name, no login, no record of who you are.

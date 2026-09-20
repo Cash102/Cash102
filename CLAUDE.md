@@ -22,6 +22,7 @@ npm run db:seed         # idempotent; run it as often as you like
 npm run typecheck
 npm run verify:stems    # renders all seeded stems, compares against KaTeX
 npm run verify:flow     # drives /check in a browser; see "Verification" below
+npm run audit:courses   # how many questions every course's check would serve
 ```
 
 Two environment variables, both required (`.env`, gitignored; see
@@ -107,7 +108,8 @@ prisma/schema.prisma        the models, heavily commented
 prisma/data/catalog.ts      27 courses, verbatim from the catalog
 prisma/data/skill-graph.ts  canonical skills, CourseSkill links, dependency edges
 prisma/data/questions/      the item bank, split by skill family, not by course:
-                              algebra, quantitative-science, writing
+                              algebra, quantitative-science, writing, history,
+                              computing
 prisma/seed.ts              validates everything before the first write
 lib/notation.ts             the stem format and its validator
 lib/select-questions.ts     deterministic selection
@@ -138,35 +140,52 @@ question's slot and two questions render at once.
 
 ## State, and what is open
 
-Done: schema and migration; seed (27 courses, 8 prerequisite edges, 15 canonical
-skills, 23 CourseSkill links across 5 courses, 11 dependency edges, 51
-questions, 204 options); the `/check` flow; the report.
+Done: schema and migration; seed (27 courses, 8 prerequisite edges, 22 canonical
+skills, 72 CourseSkill links across 17 courses, 16 dependency edges, 79
+questions, 316 options); the `/check` flow; the report.
 
-Five courses have live checks: AP Calculus BC I, AP Biology, AP Literature I, AP
-Chemistry and AP Physics C. The last two were added without writing a single
-question — they link to skills Calculus and Biology already own. That is the
-return on making `Skill` canonical, and it is the pattern to follow for any new
-course: write chain text and weights, reuse the bank.
+**17 of the 21 offered courses have a live check**, every one of them serving 12
+to 14 questions (`npm run audit:courses` prints the table). Every required
+course is covered. Most of them cost no questions at all: AP Precalculus, Calc
+BC II, Lit II, AP Euro, Micro, Environmental Science and Psychology are entirely
+made of skills another course already owned. Adding a course is chain text and
+weights — that is the return on canonical `Skill`, and it is the pattern to
+follow.
+
+Sixteen of the 22 canonical skills have `originCourseCode` NULL. The finding is
+no longer a Calculus story: the same middle school skills are load-bearing under
+maths, science, history, economics and computing, and the building teaches none
+of them.
+
+Four offered courses are deliberately not linked: **AP Language and Composition
+II** is the origin of the writing skills rather than a course that rests on
+them, so its own prerequisites would be middle school writing skills nobody has
+written yet; **AP Art History**, **AP Comparative Government** and **Film in the
+20th Century** are electives nobody has asked for yet, and all three would be
+cheap (Art History and Film reuse the writing skills, Comp Gov reuses the
+history ones).
 
 **The one thing still blocking a real pilot: no teacher has reviewed any of
-this.** The Biology and Literature skill chains, every question outside the
-original fourteen, and the Bio/Lit/Chem/Physics dependency edges are all marked
-TODO in place. They are defensible, they are not authoritative, and a wrong edge
-sends a student to fix the wrong thing. Get a teacher on each subject before
-this goes in front of students.
+this.** Every skill chain outside the original Calculus seven, every question
+past the original fourteen, and every dependency edge outside Calculus is mine,
+marked TODO in place. They are defensible and they are not authoritative. The
+history and computing skills are grounded in the College Board frameworks (the
+APUSH historical thinking skills, the CSP computational thinking practices) but
+sit deliberately one layer BELOW them — they are what a student needs before the
+framework's skills are reachable, which is the same relationship the catalog has
+to the skill layer everywhere else here. That judgment needs a teacher on each
+subject.
 
 Also open:
 
 - **Graph questions have no graphs.** `Question` has no image field, so the
   `read-graphs` items describe their graph in words. That still catches axes
-  read backwards, a truncated axis, and a plateau read as a fall, but a real
-  graph-reading bank needs images — which means a schema decision about where
-  the image lives and how the notation validator treats it.
-- **More courses.** AP Environmental Science and APUSH are the obvious next
-  links; APUSH would be the second `skill` chain and could share writing skills
-  with AP Lit.
+  read backwards, a truncated axis, and a plateau read as a fall, but four
+  courses now lean on that skill, so the case for images has got stronger.
 - **A teacher submission form.** Whatever writes questions must go through
   `assertValidStem` — that is the whole contract in invariant 2.
+- **Retake variety.** Most skills have exactly four questions, so a student who
+  retakes a check sees most of them again. Six to eight per skill would fix it.
 
 Recently resolved, so you do not re-discover them: the catalog has 27 entries
 (all seeded; 26 was a miscount), and the question the prototype filed under
