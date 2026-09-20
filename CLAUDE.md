@@ -34,6 +34,20 @@ Two environment variables, both required (`.env`, gitignored; see
   migration engine needs advisory locks and prepared statements, which a
   transaction-mode pooler does not provide. Locally, set both the same.
 
+The database lives on Neon, so it outlives any container. Two things about that
+are worth knowing before you waste an hour on them:
+
+- **`.env` is gitignored, so it does not travel.** A fresh checkout — or a fresh
+  cloud container — has no connection string at all. Get it from the Neon
+  dashboard rather than expecting it to be in the repo.
+- **A Claude Code web container cannot reach Neon.** Its egress allows HTTPS and
+  blocks raw Postgres on 5432, so Prisma, `psql` and the app itself all fail
+  there with `P1001: Can't reach database server`. That is the sandbox, not the
+  config: the same string works from a laptop or from Vercel. For work inside
+  such a container, run a local Postgres and point `.env` at it (there is a
+  commented pair of lines in `.env` for exactly this), or reach Neon over its
+  SQL-over-HTTP endpoint, which does go through the proxy.
+
 ## The data model, in one paragraph
 
 Two layers. The **catalog** (`Course`, `CoursePrerequisite`) comes verbatim from
