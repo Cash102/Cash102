@@ -67,7 +67,13 @@ await page.goto(`${BASE}/check`, { waitUntil: "networkidle" });
 const offered = await page.locator("form button[type=submit]").count();
 check(offered > 0, "picker lists at least one course", `(${offered})`);
 
-await page.locator("form button[type=submit]").first().click();
+// Prefer a maths course: the bug this suite exists to catch is KaTeX elements
+// from one stem reconciling into the next, and a writing check has no maths in
+// it to bleed. Falls back to whatever is first if Calculus is not listed.
+const buttons = page.locator("form button[type=submit]");
+const labels = await buttons.allInnerTexts();
+const mathFirst = labels.findIndex((label) => /calculus|physics|chemistry/i.test(label));
+await buttons.nth(mathFirst === -1 ? 0 : mathFirst).click();
 await page.waitForURL(/\/check\/.+/);
 const attemptId = page.url().split("/").pop() ?? "";
 

@@ -1,40 +1,17 @@
 /**
- * The fourteen diagnostic questions, ported from the prototype.
+ * ALGEBRA — the skills the Calculus chains rest on, and the ones AP Physics C
+ * rests on too. Nothing here is a calculus question: that is the point, and the
+ * student is told so up front.
  *
- * None of them is a calculus question. That is the point: the student is told
- * up front that the check is looking underneath the course, not inside it.
+ * These stems are deliberately course-neutral. The skills are canonical, so the
+ * same factoring question serves every course that links to factoring.
  *
- * NOTATION: stems and option text use the stored format defined in
- * lib/notation.ts — plain text with math inside $...$. No HTML anywhere. The
- * seed validates every string here before it writes, so a bad stem fails the
- * seed rather than reaching a render path. Written with String.raw so that
- * backslash commands survive: a plain "\ne" is the two characters "ne".
- *
- * OPTION ORDER: the correct answer is authored first, as in the prototype. The
- * client shuffles at render time; nothing downstream may assume position 0.
- *
- * MISCONCEPTIONS: optional here because these are content-chain questions,
- * where a wrong answer is mostly just wrong. They are filled in where a
- * distractor represents a specific, nameable error. For the skill chains (Lit),
- * every distractor will need one — that is what makes a judgment question
- * diagnostic rather than a recall question in disguise.
+ * Fourteen of these are ported from the original prototype.
  */
 
-export interface SeedQuestionOption {
-  text: string;
-  isCorrect?: boolean;
-  misconception?: string;
-}
+import type { SeedQuestion } from "./types";
 
-export interface SeedQuestion {
-  /** Authored id, so reseeding is idempotent and answer history survives. */
-  id: string;
-  skillId: string;
-  prompt: string;
-  options: SeedQuestionOption[];
-}
-
-export const QUESTIONS: SeedQuestion[] = [
+export const ALGEBRA_QUESTIONS: SeedQuestion[] = [
   {
     id: "q-solve-for-constant-1",
     skillId: "solve-for-constant",
@@ -191,12 +168,13 @@ export const QUESTIONS: SeedQuestion[] = [
     ],
   },
   {
-    // NOTE: the prototype tagged this one setequal, but it reads as
-    // solve-for-constant — the equation is handed to the student already
-    // written. Kept on the prototype's skill so the port is faithful; worth
-    // deciding before you write question 15.
+    // RETAGGED. The prototype filed this under setequal, but the equation is
+    // handed to the student already written, so what it actually tests is
+    // solving for the constant. The id keeps its original name: ids are the
+    // stable key that AttemptAnswer rows point at, and renaming one would
+    // strand the old row in the pool rather than replace it.
     id: "q-set-expressions-equal-2",
-    skillId: "set-expressions-equal",
+    skillId: "solve-for-constant",
     prompt:
       String.raw`You set up $1 + a = 3$ to make the pieces meet.` + "\n" +
       String.raw`What is $a$?`,
@@ -205,6 +183,70 @@ export const QUESTIONS: SeedQuestion[] = [
       { text: String.raw`$a = 3$`, misconception: "Read off the right-hand side without solving" },
       { text: String.raw`$a = 4$`, misconception: "Added instead of subtracting" },
       { text: String.raw`$a = -2$`, misconception: "Solved correctly, then flipped the sign" },
+    ],
+  },
+  {
+    // Written to replace the question retagged above, so setting-up and
+    // solving keep two questions each.
+    id: "q-set-expressions-equal-3",
+    skillId: "set-expressions-equal",
+    prompt:
+      String.raw`$f(x) = 2x + b$ when $x < 3$, and $x^2$ when $x \ge 3$.` + "\n" +
+      String.raw`Which equation makes the two pieces meet at $x = 3$?`,
+    options: [
+      { text: String.raw`$6 + b = 9$`, isCorrect: true },
+      { text: String.raw`$2 + b = 9$`, misconception: "Substituted the break point into only part of the piece" },
+      { text: String.raw`$b = 9$`, misconception: "Set the constant equal to the other piece without substituting" },
+      { text: String.raw`$6 + b = 3$`, misconception: "Substituted the break point into the wrong side" },
+    ],
+  },
+  // The two skills AP Physics C leans on hardest had only two questions each,
+  // which left its check three questions short of a full fourteen. These four
+  // fill it out, and give Calculus more variety across retakes.
+  {
+    id: "q-substitute-value-3",
+    skillId: "substitute-value",
+    prompt: String.raw`Evaluate  $-x^2 + 4$  at  $x = 3$`,
+    options: [
+      { text: String.raw`$-5$`, isCorrect: true },
+      { text: String.raw`$13$`, misconception: "Squared the sign along with the number" },
+      { text: String.raw`$-13$`, misconception: "Negated the constant along with the square" },
+      { text: String.raw`$7$`, misconception: "Dropped the exponent" },
+    ],
+  },
+  {
+    id: "q-substitute-value-4",
+    skillId: "substitute-value",
+    prompt:
+      String.raw`$h(t) = 5 - 2t$.` + "\n" +
+      String.raw`What is $h(-4)$?`,
+    options: [
+      { text: String.raw`$13$`, isCorrect: true },
+      { text: String.raw`$-3$`, misconception: "Substituted $4$ where the value was $-4$" },
+      { text: String.raw`$3$`, misconception: "Subtracted where two negatives should have added" },
+      { text: String.raw`$-13$`, misconception: "Negated the whole result at the end" },
+    ],
+  },
+  {
+    id: "q-factoring-quadratics-3",
+    skillId: "factoring-quadratics",
+    prompt: String.raw`Factor:  $2x^2 + 7x + 3$`,
+    options: [
+      { text: String.raw`$(2x + 1)(x + 3)$`, isCorrect: true },
+      { text: String.raw`$(2x + 3)(x + 1)$`, misconception: "Swapped the constants, which changes the middle term" },
+      { text: String.raw`$(x + 1)(x + 3)$`, misconception: "Ignored the leading coefficient" },
+      { text: String.raw`$(2x - 1)(x - 3)$`, misconception: "Right factors, wrong signs" },
+    ],
+  },
+  {
+    id: "q-factoring-quadratics-4",
+    skillId: "factoring-quadratics",
+    prompt: String.raw`Factor completely:  $x^3 - 4x$`,
+    options: [
+      { text: String.raw`$x(x - 2)(x + 2)$`, isCorrect: true },
+      { text: String.raw`$x(x^2 - 4)$`, misconception: "Stopped before factoring the difference of squares" },
+      { text: String.raw`$(x - 2)(x + 2)$`, misconception: "Dropped the common factor of $x$" },
+      { text: String.raw`$x(x - 4)(x + 4)$`, misconception: "Took the square root of the wrong number" },
     ],
   },
 ];

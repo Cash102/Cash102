@@ -106,7 +106,8 @@ authoring scale.
 prisma/schema.prisma        the models, heavily commented
 prisma/data/catalog.ts      27 courses, verbatim from the catalog
 prisma/data/skill-graph.ts  canonical skills, CourseSkill links, dependency edges
-prisma/data/questions.ts    the 14 calculus questions
+prisma/data/questions/      the item bank, split by skill family, not by course:
+                              algebra, quantitative-science, writing
 prisma/seed.ts              validates everything before the first write
 lib/notation.ts             the stem format and its validator
 lib/select-questions.ts     deterministic selection
@@ -138,26 +139,39 @@ question's slot and two questions render at once.
 ## State, and what is open
 
 Done: schema and migration; seed (27 courses, 8 prerequisite edges, 15 canonical
-skills, 15 CourseSkill links, 6 Calculus dependency edges, 14 questions, 56
-options); the `/check` flow; the report.
+skills, 23 CourseSkill links across 5 courses, 11 dependency edges, 51
+questions, 204 options); the `/check` flow; the report.
 
-Open, roughly in order:
+Five courses have live checks: AP Calculus BC I, AP Biology, AP Literature I, AP
+Chemistry and AP Physics C. The last two were added without writing a single
+question — they link to skills Calculus and Biology already own. That is the
+return on making `Skill` canonical, and it is the pattern to follow for any new
+course: write chain text and weights, reuse the bank.
 
-- **Questions for AP Biology and AP Lit.** Their skills are seeded; their
-  questions are not, which is why the picker shows only Calculus (it filters to
-  courses that actually have questions). AP Lit questions must test judgment,
-  not recall — every distractor needs a `misconception` naming a specific bad
-  move, because that is what makes a `skill`-chain question diagnostic.
-- **Teacher review.** The Bio and Lit skill chains are marked TODO in
-  `skill-graph.ts` and have not been confirmed by a teacher.
-- **Bio and Lit dependency edges.** Deliberately unauthored. A missing edge
-  degrades to weight ordering; a wrong edge sends a student to fix the wrong
-  thing.
-- **Cross-course links**, e.g. AP Chemistry to `ratios-and-proportions` and
-  `scientific-notation`. This is where the canonical `Skill` decision pays off:
-  a new course inherits existing questions with no new authoring.
+**The one thing still blocking a real pilot: no teacher has reviewed any of
+this.** The Biology and Literature skill chains, every question outside the
+original fourteen, and the Bio/Lit/Chem/Physics dependency edges are all marked
+TODO in place. They are defensible, they are not authoritative, and a wrong edge
+sends a student to fix the wrong thing. Get a teacher on each subject before
+this goes in front of students.
 
-Two loose ends flagged earlier and still unresolved: the catalog array has 27
-entries (not 26, if that count matters), and `q-set-expressions-equal-2` is
-tagged `set-expressions-equal` to stay faithful to the prototype but reads as
-`solve-for-constant`.
+Also open:
+
+- **Graph questions have no graphs.** `Question` has no image field, so the
+  `read-graphs` items describe their graph in words. That still catches axes
+  read backwards, a truncated axis, and a plateau read as a fall, but a real
+  graph-reading bank needs images — which means a schema decision about where
+  the image lives and how the notation validator treats it.
+- **More courses.** AP Environmental Science and APUSH are the obvious next
+  links; APUSH would be the second `skill` chain and could share writing skills
+  with AP Lit.
+- **A teacher submission form.** Whatever writes questions must go through
+  `assertValidStem` — that is the whole contract in invariant 2.
+
+Recently resolved, so you do not re-discover them: the catalog has 27 entries
+(all seeded; 26 was a miscount), and the question the prototype filed under
+`set-expressions-equal` is retagged to `solve-for-constant` with a replacement
+question written, because it hands the student the equation already set up. Its
+id still reads `q-set-expressions-equal-2`: ids are the stable key
+`AttemptAnswer` rows point at, and renaming one would strand the old row in the
+pool rather than replace it.

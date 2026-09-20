@@ -129,10 +129,10 @@ export const SKILLS: CanonicalSkill[] = [
 // ---------------------------------------------------------------------------
 // COURSE -> SKILL LINKS
 //
-// Today this is 1:1 with SKILLS, because only three courses are scaffolded and
-// no skill is shared yet. The first payoff arrives when AP Chemistry links to
-// ratios-and-proportions and scientific-notation, and AP Physics C links to
-// substitute-value and solve-for-constant: new courses, no new questions.
+// No longer 1:1 with SKILLS: AP Chemistry and AP Physics C link to skills that
+// Biology and Calculus already own, and inherit their questions for free. That
+// is the whole return on making Skill canonical — a new course costs chain text
+// and weights, not an item bank.
 // ---------------------------------------------------------------------------
 
 export const COURSE_SKILLS: CourseSkillLink[] = [
@@ -228,6 +228,65 @@ export const COURSE_SKILLS: CourseSkillLink[] = [
             "Connect a device to its effect on meaning",
             "Move from a 3 to a 5 or 6 on the AP Lit essay rubric"],
     practiceQuery: "literary analysis commentary vs summary" },
+
+  // ===== AP CHEMISTRY — no new skills, no new questions =====
+  // This block is the canonical-Skill decision paying off. Chemistry leans on
+  // four skills that already exist, already have questions, and already carry
+  // their origin: adding the course was four rows of chain text. The weights
+  // and chains are Chemistry's own, because that is what CourseSkill is for.
+  // TODO: confirm with an AP Chem teacher.
+  { courseCode: "SCFYHAR", skillId: "ratios-and-proportions", weight: 5,
+    chain: ["Set up and solve a proportion",
+            "Convert between moles, mass, and number of particles",
+            "Work stoichiometry from a balanced equation"],
+    practiceQuery: "ratios and proportions" },
+
+  { courseCode: "SCFYHAR", skillId: "scientific-notation", weight: 5,
+    chain: ["Convert between units and powers of ten",
+            "Handle Avogadro's number and molar quantities",
+            "Complete quantitative lab calculations"],
+    practiceQuery: "scientific notation unit conversion" },
+
+  { courseCode: "SCFYHAR", skillId: "bonding-and-polarity", weight: 5,
+    chain: ["Tell ionic from covalent bonds, and polar from nonpolar",
+            "Predict what dissolves in what, and why",
+            "Explain intermolecular forces and the properties they cause"],
+    practiceQuery: "ionic vs covalent bonds polarity" },
+
+  { courseCode: "SCFYHAR", skillId: "read-graphs", weight: 3,
+    chain: ["Read axes, units, and scale correctly",
+            "Follow a titration or rate curve to its turning point",
+            "Analyze experimental data in free response questions"],
+    practiceQuery: "interpreting graphs science" },
+
+  // ===== AP PHYSICS C: MECHANICS — likewise =====
+  // Physics C is taken concurrently with or after Calculus BC I, and leans on
+  // the same middle school algebra underneath it. Same skills, same questions,
+  // different chains.
+  // TODO: confirm with the AP Physics C teacher.
+  { courseCode: "SPFYHAR2", skillId: "substitute-value", weight: 5,
+    chain: ["Substitute carefully, signs and units included",
+            "Evaluate a kinematics equation at a given time",
+            "Solve motion problems without losing a sign"],
+    practiceQuery: "evaluating expressions substitution" },
+
+  { courseCode: "SPFYHAR2", skillId: "solve-for-constant", weight: 5,
+    chain: ["Solve an equation for a letter that isn't x",
+            "Rearrange a law for the quantity you actually want",
+            "Work symbolic free response problems"],
+    practiceQuery: "solving equations for a variable" },
+
+  { courseCode: "SPFYHAR2", skillId: "ratios-and-proportions", weight: 4,
+    chain: ["Set up and solve a proportion",
+            "Say what happens to one quantity when another doubles",
+            "Check an answer by its units and its order of magnitude"],
+    practiceQuery: "ratios and proportions" },
+
+  { courseCode: "SPFYHAR2", skillId: "factoring-quadratics", weight: 3,
+    chain: ["Factor a quadratic into two binomials",
+            "Solve a quadratic kinematics equation for the time",
+            "Choose the root that physically happened"],
+    practiceQuery: "factoring quadratics" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -239,9 +298,17 @@ export const COURSE_SKILLS: CourseSkillLink[] = [
 // FACTORING first — which the prototype, sorting by accuracy alone, could not
 // do, because it would lead with whichever one they happened to miss more.
 //
-// Only Calculus is authored. Bio and Lit edges are deliberately absent until a
-// teacher confirms them; an absent edge degrades gracefully (the skill sorts by
-// weight, as before), a wrong edge tells a student to fix the wrong thing.
+// The writing chain is the densest set here, and the most useful: it sorts to
+// claim-vs-summary first, which is exactly the thing AP Lit students are told
+// over and over and still do not fix, because nobody shows them it is the root.
+//
+// The quantitative science skills are mostly independent of each other, and
+// only one edge among them is defensible enough to author. The rest are absent
+// on purpose: an absent edge degrades gracefully (the skill sorts by weight, as
+// before), a wrong edge tells a student to fix the wrong thing.
+//
+// TODO: the Bio and Lit edges are mine, not a teacher's. Confirm before they go
+// in front of students.
 //
 // Must stay acyclic. The seed asserts it.
 // ---------------------------------------------------------------------------
@@ -264,4 +331,24 @@ export const SKILL_DEPENDENCIES: SkillEdge[] = [
 
   { prerequisiteId: "set-expressions-equal", dependentId: "solve-for-constant", strength: 5,
     rationale: "You have to write the equation before there is anything to solve for the constant." },
+
+  // ===== AP LITERATURE I — the writing chain =====
+  { prerequisiteId: "claim-vs-summary", dependentId: "defensible-thesis", strength: 5,
+    rationale: "A thesis is a claim. While arguing and reporting still look alike, the thesis comes out as a summary in a confident voice." },
+
+  { prerequisiteId: "claim-vs-summary", dependentId: "commentary-not-restatement", strength: 4,
+    rationale: "Commentary is the same distinction one sentence at a time: restating the evidence is summarising it." },
+
+  { prerequisiteId: "defensible-thesis", dependentId: "integrate-evidence", strength: 3,
+    rationale: "Evidence is chosen to support a position. With no position, every quote from the right scene looks as good as the next." },
+
+  { prerequisiteId: "integrate-evidence", dependentId: "commentary-not-restatement", strength: 4,
+    rationale: "Commentary explains how the quote proves the claim. A quote that was dropped in, or never bore on the claim, leaves nothing to explain." },
+
+  // ===== QUANTITATIVE SCIENCE =====
+  // The only edge among these four that holds up. Ratios, bonding and graph
+  // reading are otherwise independent of one another, so they are left to sort
+  // by weight.
+  { prerequisiteId: "scientific-notation", dependentId: "read-graphs", strength: 3,
+    rationale: "An axis labelled in powers of ten is unreadable to a student for whom powers of ten are unreadable." },
 ];
