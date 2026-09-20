@@ -678,4 +678,373 @@ export const WRITING_QUESTIONS: SeedQuestion[] = [
       },
     ],
   },
+
+  // ---- Second wave: four more of each, so a retake draws a different sample.
+
+  // ===== Telling a claim apart from a summary =====
+  {
+    id: "q-claim-vs-summary-5",
+    skillId: "claim-vs-summary",
+    prompt: `Which of these could a classmate reasonably disagree with?`,
+    options: [
+      {
+        text: `Douglass makes learning to read the moment he stops being property in his own mind.`,
+        isCorrect: true,
+      },
+      { text: `Douglass eventually escapes to the North.`, misconception: "Chose an event from the book" },
+      { text: `The Narrative runs to about a hundred pages.`, misconception: "Chose a fact about the object rather than the text" },
+      { text: `Douglass is an important American writer.`, misconception: "Chose a consensus nobody in the room disputes" },
+    ],
+  },
+  {
+    id: "q-claim-vs-summary-6",
+    skillId: "claim-vs-summary",
+    prompt:
+      `A paragraph opens: "The story begins with the narrator alone in the house."` + "\n" +
+      `Which revision makes it a claim?`,
+    options: [
+      {
+        text: `The narrator's solitude is the story's method: with nobody to contradict him, his account cannot be tested.`,
+        isCorrect: true,
+      },
+      { text: `The story begins with the narrator alone, which is important.`, misconception: "Asserted importance instead of taking a position" },
+      { text: `The story begins with the narrator alone in a dark, shuttered house.`, misconception: "Added detail, which is still a summary" },
+      { text: `At the opening, the narrator is isolated from everyone else.`, misconception: "Reworded the summary without changing what it does" },
+    ],
+  },
+  {
+    id: "q-claim-vs-summary-7",
+    skillId: "claim-vs-summary",
+    prompt: `Which question tells you whether a sentence is a claim?`,
+    options: [
+      { text: `Could someone reasonably write the opposite?`, isCorrect: true },
+      { text: `Is it about the text?`, misconception: "Summaries are about the text too" },
+      { text: `Does it use a literary term?`, misconception: "Naming a device is not the same as arguing" },
+      { text: `Is it true?`, misconception: "Summaries are true as well — that is exactly the problem with them" },
+    ],
+  },
+  {
+    id: "q-claim-vs-summary-8",
+    skillId: "claim-vs-summary",
+    prompt:
+      `A body paragraph contains: a claim, a quotation, an explanation, and a summary of the chapter.` + "\n" +
+      `Which one should come out?`,
+    options: [
+      { text: `The chapter summary`, isCorrect: true },
+      { text: `The explanation`, misconception: "Cut the commentary, which is the part that earns the point" },
+      { text: `The quotation`, misconception: "Cut the evidence the claim was resting on" },
+      { text: `The claim`, misconception: "Cut the thing the rest of the paragraph exists to support" },
+    ],
+  },
+
+  // ===== Writing a defensible thesis =====
+  {
+    id: "q-defensible-thesis-5",
+    skillId: "defensible-thesis",
+    prompt: `Which thesis is too broad to defend in a single essay?`,
+    options: [
+      { text: `American literature reflects the changing values of the nation.`, isCorrect: true },
+      {
+        text: `Hawthorne gives his hypocrites the best arguments, which makes the reader complicit in believing them.`,
+        misconception: "This one is narrow enough to argue in one essay",
+      },
+      {
+        text: `Chopin ends scenes one beat before the decision, so the reader supplies the motive.`,
+        misconception: "This one is narrow enough to argue in one essay",
+      },
+      {
+        text: `Poe's narrators lose the reader through precision rather than through raving.`,
+        misconception: "This one is narrow enough to argue in one essay",
+      },
+    ],
+  },
+  {
+    id: "q-defensible-thesis-6",
+    skillId: "defensible-thesis",
+    prompt: `"The novel uses light and dark imagery." What would turn that into a thesis?`,
+    options: [
+      { text: `Saying what the imagery does — that it makes moral judgment look like plain perception`, isCorrect: true },
+      { text: `Listing more of the images`, misconception: "Added inventory rather than a position" },
+      { text: `Saying the imagery is effective`, misconception: "Added evaluation rather than a position" },
+      { text: `Counting how often the imagery appears`, misconception: "Gathered evidence for a claim that has not been made yet" },
+    ],
+  },
+  {
+    id: "q-defensible-thesis-7",
+    skillId: "defensible-thesis",
+    prompt:
+      `Halfway through drafting, the evidence you keep finding supports a different reading from your thesis.` + "\n" +
+      `What should you do?`,
+    options: [
+      { text: `Change the thesis to the one the evidence actually supports`, isCorrect: true },
+      { text: `Leave the evidence out`, misconception: "Protected the thesis from the text" },
+      { text: `Add the second reading as a second thesis`, misconception: "Split one essay into two arguments" },
+      { text: `Mention the second reading in the conclusion`, misconception: "Noted the contradiction instead of resolving it" },
+    ],
+  },
+  {
+    id: "q-defensible-thesis-8",
+    skillId: "defensible-thesis",
+    prompt: `Which of these is defensible?`,
+    options: [
+      {
+        text: `Dickinson's near-rhymes fail on purpose, so that agreement in her poems always sounds slightly forced.`,
+        isCorrect: true,
+      },
+      { text: `Dickinson wrote a great many poems about death.`, misconception: "Chose a countable fact" },
+      { text: `Dickinson's poems are short.`, misconception: "Chose a description of the object" },
+      { text: `Dickinson is widely admired today.`, misconception: "Chose a claim about reputation rather than about the poems" },
+    ],
+  },
+
+  // ===== Selecting and integrating textual evidence =====
+  {
+    id: "q-integrate-evidence-5",
+    skillId: "integrate-evidence",
+    prompt: `Which sentence makes the quotation part of its own grammar?`,
+    options: [
+      {
+        text: `The narrator's insistence that he is "not mad" arrives before anyone has accused him of anything.`,
+        isCorrect: true,
+      },
+      { text: `"I am not mad." That is what the narrator says.`, misconception: "Set the quotation down and then pointed at it" },
+      { text: `The narrator gives us this quote: "I am not mad."`, misconception: "Announced a quotation instead of using one" },
+      { text: `According to the quote, the narrator is not mad.`, misconception: "Paraphrased the quotation and kept the word quote" },
+    ],
+  },
+  {
+    id: "q-integrate-evidence-6",
+    skillId: "integrate-evidence",
+    prompt:
+      `Your claim is that a character is lying.` + "\n" +
+      `Which evidence is strongest?`,
+    options: [
+      { text: `A line where what they say contradicts something the reader has already seen`, isCorrect: true },
+      { text: `A line where another character calls them a liar`, misconception: "Chose someone's assertion over the text's own demonstration" },
+      { text: `A long description of how they look while speaking`, misconception: "Chose vividness over relevance" },
+      { text: `A line where they seem nervous`, misconception: "Chose an impression rather than evidence" },
+    ],
+  },
+  {
+    id: "q-integrate-evidence-7",
+    skillId: "integrate-evidence",
+    prompt: `How much of a passage should you quote?`,
+    options: [
+      { text: `The part that does the work your claim needs`, isCorrect: true },
+      { text: `As much as you can fit`, misconception: "Treated quantity of evidence as strength" },
+      { text: `A single word, always`, misconception: "Made a rule about length instead of about function" },
+      { text: `A complete sentence, always`, misconception: "Made a rule about grammar instead of about function" },
+    ],
+  },
+  {
+    id: "q-integrate-evidence-8",
+    skillId: "integrate-evidence",
+    prompt:
+      `A quotation is followed straight away by the next claim, with nothing in between.` + "\n" +
+      `What is missing?`,
+    options: [
+      { text: `The commentary that explains how the quotation supports the claim`, isCorrect: true },
+      { text: `A citation`, misconception: "Named a formatting need instead of the reasoning gap" },
+      { text: `A longer quotation`, misconception: "Added evidence where explanation was missing" },
+      { text: `A transition word`, misconception: "Named a connector where reasoning was missing" },
+    ],
+  },
+
+  // ===== Writing commentary instead of restating =====
+  {
+    id: "q-commentary-5",
+    skillId: "commentary-not-restatement",
+    prompt:
+      `Evidence: a character says "I am content" three separate times in one scene.` + "\n" +
+      `Which sentence is commentary?`,
+    options: [
+      {
+        text: `The repetition turns contentment into something she has to keep saying, which is what people do with things they do not feel.`,
+        isCorrect: true,
+      },
+      { text: `She says that she is content three times.`, misconception: "Restated the evidence" },
+      { text: `This shows that she is content.`, misconception: "Took the line at face value and called that analysis" },
+      { text: `Repetition is a common device in fiction.`, misconception: "Defined the device instead of reading it" },
+    ],
+  },
+  {
+    id: "q-commentary-6",
+    skillId: "commentary-not-restatement",
+    prompt: `In "explain HOW the evidence proves the claim", what does "how" ask for?`,
+    options: [
+      { text: `The mechanism — what the evidence does that makes the claim follow`, isCorrect: true },
+      { text: `The method the author used to write the passage`, misconception: "Read 'how' as a question about the author's process" },
+      { text: `How you found the quotation`, misconception: "Read 'how' as a question about your research" },
+      { text: `How the passage makes the reader feel`, misconception: "Read 'how' as a question about effect on you rather than about the argument" },
+    ],
+  },
+  {
+    id: "q-commentary-7",
+    skillId: "commentary-not-restatement",
+    prompt: `A student writes: "The dark imagery creates a dark mood." What is wrong with it?`,
+    options: [
+      { text: `It explains the device with the device — nothing new has been said`, isCorrect: true },
+      { text: `It is too short to be commentary`, misconception: "Judged by length rather than by what the sentence does" },
+      { text: `"Dark" is the wrong word for the mood`, misconception: "Objected to the vocabulary rather than the circularity" },
+      { text: `It needs a quotation in front of it`, misconception: "Added evidence where the reasoning was the gap" },
+    ],
+  },
+  {
+    id: "q-commentary-8",
+    skillId: "commentary-not-restatement",
+    prompt:
+      `Evidence: a description puts the reader in the room before the character decides.` + "\n" +
+      `Which sentence earns the commentary point?`,
+    options: [
+      {
+        text: `Placing us there first makes the decision feel like something we were present for rather than something we were told about.`,
+        isCorrect: true,
+      },
+      { text: `This description is very powerful.`, misconception: "Asserted an effect without explaining how it is produced" },
+      { text: `The author uses descriptive imagery here.`, misconception: "Named the device without its effect" },
+      { text: `The reader can see the room clearly.`, misconception: "Described the effect at the level of the picture and stopped" },
+    ],
+  },
+
+  // ===== Finding what a text argues =====
+  {
+    id: "q-read-for-the-argument-5",
+    skillId: "read-for-the-argument",
+    prompt: `Which sentence in a paragraph is most likely to be the claim?`,
+    options: [
+      { text: `The one the other sentences are there to make you believe`, isCorrect: true },
+      { text: `The first one`, misconception: "Used position on the page instead of function" },
+      { text: `The longest one`, misconception: "Used length instead of function" },
+      { text: `The one containing a quotation`, misconception: "Mistook the evidence for the claim it supports" },
+    ],
+  },
+  {
+    id: "q-read-for-the-argument-6",
+    skillId: "read-for-the-argument",
+    prompt:
+      `An article spends two paragraphs describing a problem and one proposing a fix.` + "\n" +
+      `What is it arguing?`,
+    options: [
+      { text: `That the fix is worth adopting — the description is the case for it`, isCorrect: true },
+      { text: `That the problem is serious`, misconception: "Took the setup for the point" },
+      { text: `Nothing — it is an informative piece`, misconception: "Read an argument as information because it contains facts" },
+      { text: `Both equally, since more space goes to the problem`, misconception: "Measured the argument by word count" },
+    ],
+  },
+  {
+    id: "q-read-for-the-argument-7",
+    skillId: "read-for-the-argument",
+    prompt: `A writer says: "It is not that the policy is expensive, but that it is aimed at the wrong people." What is the claim?`,
+    options: [
+      { text: `That the policy is aimed at the wrong people`, isCorrect: true },
+      { text: `That the policy is expensive`, misconception: "Took the position being rejected for the claim" },
+      { text: `Both halves equally`, misconception: "Missed that the first half is being set aside" },
+      { text: `Neither — the sentence only sets up`, misconception: "Read a claim as a preamble" },
+    ],
+  },
+  {
+    id: "q-read-for-the-argument-8",
+    skillId: "read-for-the-argument",
+    prompt:
+      `You are sure you disagree with an article, but you cannot say what you disagree with.` + "\n" +
+      `What does that tell you?`,
+    options: [
+      { text: `You have not found its claim yet`, isCorrect: true },
+      { text: `The article does not make a claim`, misconception: "Blamed the text for a gap in the reading" },
+      { text: `You disagree with the topic rather than the article`, misconception: "Confused the subject with the position taken on it" },
+      { text: `The article is badly written`, misconception: "Turned a reading difficulty into a judgment about the writer" },
+    ],
+  },
+
+  // ===== Telling a supported statement from a bare assertion =====
+  {
+    id: "q-evidence-vs-assertion-5",
+    skillId: "evidence-vs-assertion",
+    prompt: `Which of these needs support before a reader should accept it?`,
+    options: [
+      { text: `The new schedule has improved student outcomes.`, isCorrect: true },
+      { text: `The schedule changed at the start of September.`, misconception: "Chose a checkable fact" },
+      { text: `The day now begins at 8:40.`, misconception: "Chose a checkable fact" },
+      { text: `There are six periods in the day.`, misconception: "Chose a checkable fact" },
+    ],
+  },
+  {
+    id: "q-evidence-vs-assertion-6",
+    skillId: "evidence-vs-assertion",
+    prompt: `A writer gives a precise number and no source. Is that evidence?`,
+    options: [
+      { text: `Only as far as the reader trusts the writer — unsourced, it cannot be checked`, isCorrect: true },
+      { text: `Yes — a number is evidence by definition`, misconception: "Treated the form of evidence as the substance of it" },
+      { text: `No — numbers are never evidence on their own`, misconception: "Ruled out a whole category instead of asking where it came from" },
+      { text: `Only if the number is large`, misconception: "Judged evidence by size rather than by whether it can be checked" },
+    ],
+  },
+  {
+    id: "q-evidence-vs-assertion-7",
+    skillId: "evidence-vs-assertion",
+    prompt: `What makes a source stronger for a claim people dispute?`,
+    options: [
+      { text: `That someone who disagrees with you would still accept it`, isCorrect: true },
+      { text: `That it agrees with your conclusion`, misconception: "Chose the source by the answer it gives" },
+      { text: `That it is recent`, misconception: "Took one useful property and made it the whole test" },
+      { text: `That it is long and detailed`, misconception: "Took length for authority" },
+    ],
+  },
+  {
+    id: "q-evidence-vs-assertion-8",
+    skillId: "evidence-vs-assertion",
+    prompt: `"Nine out of ten students prefer the new system." What would you want to know?`,
+    options: [
+      { text: `Who was asked, how many of them, and by whom`, isCorrect: true },
+      { text: `Nothing — it is a statistic`, misconception: "Treated a number as supporting itself" },
+      { text: `Whether ten students is enough`, misconception: "Asked about one part of it and stopped" },
+      { text: `What the tenth student thought`, misconception: "Asked a question that does not test the claim" },
+    ],
+  },
+
+  // ===== Telling a complete sentence from a fragment or a splice =====
+  {
+    id: "q-sentence-boundaries-5",
+    skillId: "sentence-boundaries",
+    prompt: `Which of these is a fragment?`,
+    options: [
+      { text: `Because the evidence arrived too late.`, isCorrect: true },
+      { text: `The evidence arrived too late.`, misconception: "This one has a subject and a verb and stands alone" },
+      { text: `It arrived late.`, misconception: "This one is short but complete" },
+      { text: `The evidence, which arrived late, changed nothing.`, misconception: "This one carries a clause in the middle but is complete" },
+    ],
+  },
+  {
+    id: "q-sentence-boundaries-6",
+    skillId: "sentence-boundaries",
+    prompt: `Repair: "The essay is strong it needs a conclusion."`,
+    options: [
+      { text: `The essay is strong, but it needs a conclusion.`, isCorrect: true },
+      { text: `The essay is strong, it needs a conclusion.`, misconception: "Replaced a run-on with a comma splice" },
+      { text: `The essay is strong; needs a conclusion.`, misconception: "Left the second half without a subject" },
+      { text: `The essay is strong. Needing a conclusion.`, misconception: "Fixed the run-on by creating a fragment" },
+    ],
+  },
+  {
+    id: "q-sentence-boundaries-7",
+    skillId: "sentence-boundaries",
+    prompt: `Which sentence joins its two halves correctly?`,
+    options: [
+      { text: `She finished the draft; the argument still needs work.`, isCorrect: true },
+      { text: `She finished the draft, the argument still needs work.`, misconception: "Joined two complete clauses with only a comma" },
+      { text: `She finished the draft the argument still needs work.`, misconception: "Ran two complete clauses together with nothing between them" },
+      { text: `She finished the draft. Although the argument still needs work.`, misconception: "Left a subordinate clause standing on its own" },
+    ],
+  },
+  {
+    id: "q-sentence-boundaries-8",
+    skillId: "sentence-boundaries",
+    prompt: `Which one uses the semicolon correctly?`,
+    options: [
+      { text: `The data is clear; the conclusion is not.`, isCorrect: true },
+      { text: `The data is clear; which the conclusion is not.`, misconception: "Put a fragment after the semicolon" },
+      { text: `Although the data is clear; the conclusion is not.`, misconception: "Used a semicolon inside a single sentence" },
+      { text: `The data is clear; and the conclusion is not.`, misconception: "Used a semicolon where the conjunction wanted a comma" },
+    ],
+  },
 ];

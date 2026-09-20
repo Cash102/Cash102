@@ -22,7 +22,7 @@ npm run db:seed         # idempotent; run it as often as you like
 npm run typecheck
 npm run verify:stems    # renders all seeded stems, compares against KaTeX
 npm run verify:flow     # drives /check in a browser; see "Verification" below
-npm run audit:courses   # how many questions every course's check would serve
+npm run audit:courses   # per course: questions served, and measured retake overlap
 ```
 
 Two environment variables, both required (`.env`, gitignored; see
@@ -141,8 +141,15 @@ question's slot and two questions render at once.
 ## State, and what is open
 
 Done: schema and migration; seed (27 courses, 8 prerequisite edges, 25 canonical
-skills, 93 CourseSkill links, 18 dependency edges, 91 questions, 364 options);
+skills, 96 CourseSkill links, 18 dependency edges, 200 questions, 800 options);
 the `/check` flow; the report.
+
+**Every skill has exactly eight questions.** Keep it that way when adding one:
+a check serves two to four per skill, so a pool of four meant a student who
+retook it saw almost the same paper. `npm run audit:courses` measures the
+overlap rather than assuming it — two different attempts at a four-skill course
+now share about 6 of 14 questions, and at a seven- or eight-skill course about
+3 of 14. Before the second wave of authoring it was roughly 12 of 14.
 
 **All 21 offered courses have a live check**, every one serving 12 to 14
 questions (`npm run audit:courses` prints the table). Most cost no questions at
@@ -188,8 +195,15 @@ Also open:
   courses now lean on that skill, so the case for images keeps getting stronger.
 - **A teacher submission form.** Whatever writes questions must go through
   `assertValidStem` — that is the whole contract in invariant 2.
-- **Retake variety.** Most skills have exactly four questions, so a student who
-  retakes a check sees most of them again. Six to eight per skill would fix it.
+- **Retake variety, the rest of the way.** Overlap is now roughly
+  `served / pool`, which is arithmetic rather than a bug: a four-skill course
+  serves 14 of 32. Two ways further down, if it matters — more questions per
+  skill (twelve each would put it near 29 percent), or excluding what the
+  student saw last time. The second is cheaper and better: the client already
+  holds the previous attempt id in localStorage, so `startAttempt` could record
+  it on the new `Attempt` row and the selection could skip those questions.
+  That keeps invariant 3 intact — selection stays deterministic given the row —
+  but it needs a column and a migration, so it is a decision, not a tweak.
 - **Not-offered courses.** Six catalog entries are marked not offered for SY
   25-26 and have no links. If any comes back, Statistics and Number Theory reuse
   the maths skills and African American Studies reuses the history ones.

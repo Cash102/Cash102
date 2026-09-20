@@ -589,6 +589,12 @@ export const COURSE_SKILLS: CourseSkillLink[] = [
             "Work index, multiplier and rate problems"],
     practiceQuery: "ratios and proportions" },
 
+  { courseCode: "HEFYHAR1", skillId: "causation-vs-sequence", weight: 3,
+    chain: ["Tell a cause apart from what merely came after",
+            "Say why two indicators moving together is not a policy result",
+            "Argue about a policy rather than narrate the data"],
+    practiceQuery: "correlation versus causation economics" },
+
   // ===== AP MICROECONOMICS =====
   { courseCode: "HEFYHAR2", skillId: "read-graphs", weight: 5,
     chain: ["Read axes, units, and scale correctly",
@@ -652,6 +658,12 @@ export const COURSE_SKILLS: CourseSkillLink[] = [
             "Reason about data, storage and overflow"],
     practiceQuery: "binary number system place value" },
 
+  { courseCode: "SSFYHAR", skillId: "substitute-value", weight: 3,
+    chain: ["Substitute carefully, signs and exponents included",
+            "Work out what an expression evaluates to",
+            "Say what a variable holds after an assignment"],
+    practiceQuery: "evaluating expressions substitution" },
+
   // ===== AP COMPUTER SCIENCE A =====
   { courseCode: "SSFYHAR2", skillId: "trace-a-procedure", weight: 5,
     chain: ["Follow a written procedure exactly, step by step",
@@ -695,6 +707,12 @@ export const COURSE_SKILLS: CourseSkillLink[] = [
             "Say why a correlation does not establish a cause",
             "Evaluate whether a study supports its own conclusion"],
     practiceQuery: "correlation versus causation research" },
+
+  { courseCode: "SYFYHAR", skillId: "evidence-vs-assertion", weight: 4,
+    chain: ["Tell a supported statement from a bare assertion",
+            "Notice when a study is described rather than reported",
+            "Say whether a finding actually supports the claim made from it"],
+    practiceQuery: "evidence versus opinion in argument writing" },
 
   // ===== AP LANGUAGE AND COMPOSITION II — ninth grade =====
   // Note what is NOT here: the four writing skills this course teaches. It

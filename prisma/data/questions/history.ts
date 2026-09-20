@@ -298,4 +298,152 @@ export const HISTORY_QUESTIONS: SeedQuestion[] = [
       },
     ],
   },
+
+  // ---- Second wave: four more of each, so a retake draws a different sample.
+
+  // ===== Reading a source for who wrote it and why =====
+  {
+    id: "q-sourcing-5",
+    skillId: "sourcing-a-document",
+    prompt:
+      `A newspaper editorial from 1898 argues loudly for going to war.` + "\n" +
+      `What is it best evidence of?`,
+    options: [
+      { text: `Which arguments for the war were being made publicly at the time`, isCorrect: true },
+      { text: `That the war was justified`, misconception: "Took a source's position as proof that the position was right" },
+      { text: `What most readers believed`, misconception: "Read a publication as a record of its audience's opinion" },
+      { text: `The facts of how the war began`, misconception: "Used an argument as though it were a factual record" },
+    ],
+  },
+  {
+    id: "q-sourcing-6",
+    skillId: "sourcing-a-document",
+    prompt: `A government publishes a report on the success of its own programme. What is the caution?`,
+    options: [
+      { text: `The author is being judged by the results it is reporting`, isCorrect: true },
+      { text: `Government sources are reliable, so there is none`, misconception: "Treated official as neutral" },
+      { text: `Government sources are worthless and should be skipped`, misconception: "Discarded a source for having an interest" },
+      { text: `Official reports are too long to use as evidence`, misconception: "Objected to the form rather than the standpoint" },
+    ],
+  },
+  {
+    id: "q-sourcing-7",
+    skillId: "sourcing-a-document",
+    prompt: `Which detail belongs to sourcing rather than to content?`,
+    options: [
+      { text: `The letter was written to a business partner, not for publication`, isCorrect: true },
+      { text: `The letter mentions a delayed shipment`, misconception: "Named what the source says rather than where it came from" },
+      { text: `The letter runs to two pages`, misconception: "Named a physical property of the document" },
+      { text: `The letter is written in formal language`, misconception: "Named a feature of the writing rather than of the situation that produced it" },
+    ],
+  },
+  {
+    id: "q-sourcing-8",
+    skillId: "sourcing-a-document",
+    prompt: `Why does a source's intended audience matter?`,
+    options: [
+      { text: `People say different things depending on who is listening`, isCorrect: true },
+      { text: `It tells you when the source was written`, misconception: "Confused audience with date" },
+      { text: `It does not — only the author matters`, misconception: "Kept half of the situation and dropped the other half" },
+      { text: `It tells you whether the source is true`, misconception: "Expected sourcing to settle accuracy" },
+    ],
+  },
+
+  // ===== Placing an event in what surrounded it =====
+  {
+    id: "q-contextualize-5",
+    skillId: "contextualize-an-event",
+    prompt:
+      `A prompt concerns a public works programme begun in the 1930s.` + "\n" +
+      `Which sentence places it?`,
+    options: [
+      { text: `Unemployment had sat at record levels for years and private hiring had not come back`, isCorrect: true },
+      { text: `The programme built roads, bridges and public buildings`, misconception: "Described the programme instead of what surrounded it" },
+      { text: `Economic policy has always been a subject of disagreement`, misconception: "Reached for a truism instead of the moment" },
+      { text: `The programme was expanded in later years`, misconception: "Moved forward in time instead of placing the moment" },
+    ],
+  },
+  {
+    id: "q-contextualize-6",
+    skillId: "contextualize-an-event",
+    prompt: `How much context is enough?`,
+    options: [
+      { text: `Enough to make this particular development make sense, and no more`, isCorrect: true },
+      { text: `A full paragraph, every time`, misconception: "Made a rule about length rather than about relevance" },
+      { text: `One sentence, every time`, misconception: "Made a rule about length rather than about relevance" },
+      { text: `As much of the era as you can remember`, misconception: "Substituted recall for relevance" },
+    ],
+  },
+  {
+    id: "q-contextualize-7",
+    skillId: "contextualize-an-event",
+    prompt:
+      `One student writes context from the same decade. Another writes context from the same century.` + "\n" +
+      `Which is more likely to earn the point?`,
+    options: [
+      { text: `The decade — closer in time is usually closer in relevance`, isCorrect: true },
+      { text: `The century, because it covers more ground`, misconception: "Read breadth as strength" },
+      { text: `Neither — context is always too vague to score`, misconception: "Gave up on a point that is routinely earned" },
+      { text: `Both equally, since both are true`, misconception: "Treated relevance as though only accuracy mattered" },
+    ],
+  },
+  {
+    id: "q-contextualize-8",
+    skillId: "contextualize-an-event",
+    prompt: `What is the difference between contextualization and sourcing?`,
+    options: [
+      { text: `Context is what was going on around a document; sourcing is who made it and why`, isCorrect: true },
+      { text: `Context is who made it; sourcing is what was going on around it`, misconception: "Swapped the two" },
+      { text: `They are two names for the same thing`, misconception: "Collapsed two different questions into one" },
+      { text: `Context is the summary of the document`, misconception: "Read context as retelling the source" },
+    ],
+  },
+
+  // ===== Telling a cause apart from what merely came after =====
+  {
+    id: "q-causation-5",
+    skillId: "causation-vs-sequence",
+    prompt: `Which phrase signals a cause rather than an order of events?`,
+    options: [
+      { text: `which meant that`, isCorrect: true },
+      { text: `and then`, misconception: "Chose a phrase that only puts events in order" },
+      { text: `meanwhile`, misconception: "Chose a phrase that sets events side by side" },
+      { text: `afterwards`, misconception: "Chose a phrase about time" },
+    ],
+  },
+  {
+    id: "q-causation-6",
+    skillId: "causation-vs-sequence",
+    prompt:
+      `A student writes: "The war ended, and the economy boomed."` + "\n" +
+      `How do you make that a causal claim?`,
+    options: [
+      { text: `Name what the war's end released — spending, labour, demand — that the boom ran on`, isCorrect: true },
+      { text: `Put the word "because" between the two halves`, misconception: "Asserted a cause without naming a mechanism" },
+      { text: `Put the boom first in the sentence`, misconception: "Reordered the sentence instead of explaining anything" },
+      { text: `Add the years to both halves`, misconception: "Added precision about time, which is the part that was never in doubt" },
+    ],
+  },
+  {
+    id: "q-causation-7",
+    skillId: "causation-vs-sequence",
+    prompt: `Two plausible causes are offered for one event. What is the careful move?`,
+    options: [
+      { text: `Weigh them — say which did more of the work, and why`, isCorrect: true },
+      { text: `Choose the one that came first`, misconception: "Used order in time to settle a question about cause" },
+      { text: `Say both mattered equally`, misconception: "Avoided the judgment the question was asking for" },
+      { text: `Say the cause cannot be known`, misconception: "Treated a hard judgment as an impossible one" },
+    ],
+  },
+  {
+    id: "q-causation-8",
+    skillId: "causation-vs-sequence",
+    prompt: `What is the difference between a long-term cause and a trigger?`,
+    options: [
+      { text: `The long-term cause made the event possible; the trigger set off the one that happened`, isCorrect: true },
+      { text: `The trigger made it possible; the long-term cause set it off`, misconception: "Swapped the two" },
+      { text: `They are the same thing under two names`, misconception: "Collapsed two useful distinctions" },
+      { text: `The trigger always matters more`, misconception: "Ranked causes by how close they sit to the event" },
+    ],
+  },
 ];

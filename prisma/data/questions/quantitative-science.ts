@@ -284,4 +284,252 @@ export const QUANTITATIVE_SCIENCE_QUESTIONS: SeedQuestion[] = [
       { text: `It doubled`, misconception: "Read a two-point rise as a doubling" },
     ],
   },
+
+  // ---- Second wave: four more of each, so a retake draws a different sample.
+
+  // ===== Ratios, proportions, percentages =====
+  {
+    id: "q-ratios-5",
+    skillId: "ratios-and-proportions",
+    prompt:
+      String.raw`A recipe for $4$ people uses $6$ cups.` + "\n" +
+      String.raw`How many cups for $10$ people?`,
+    options: [
+      { text: String.raw`$15$`, isCorrect: true },
+      { text: String.raw`$12$`, misconception: "Added the difference instead of scaling" },
+      { text: String.raw`$2.4$`, misconception: "Inverted the ratio" },
+      { text: String.raw`$24$`, misconception: "Multiplied by the number of people rather than the scale factor" },
+    ],
+  },
+  {
+    id: "q-ratios-6",
+    skillId: "ratios-and-proportions",
+    prompt: String.raw`Which pair is in the same ratio as $3 : 12$?`,
+    options: [
+      { text: String.raw`$5 : 20$`, isCorrect: true },
+      { text: String.raw`$6 : 15$`, misconception: "Added 3 to each side instead of scaling both" },
+      { text: String.raw`$12 : 3$`, misconception: "Reversed the order of the ratio" },
+      { text: String.raw`$4 : 13$`, misconception: "Added 1 to each side instead of scaling" },
+    ],
+  },
+  {
+    id: "q-ratios-7",
+    skillId: "ratios-and-proportions",
+    prompt: String.raw`$35$ out of $140$ is what percent?`,
+    options: [
+      { text: `25 percent`, isCorrect: true },
+      { text: `4 percent`, misconception: "Divided the larger figure by the smaller" },
+      { text: `35 percent`, misconception: "Read the count itself as the percent" },
+      { text: `40 percent`, misconception: "Rounded the division to the nearest convenient figure" },
+    ],
+  },
+  {
+    id: "q-ratios-8",
+    skillId: "ratios-and-proportions",
+    prompt:
+      String.raw`A map uses $1$ cm to $25$ km. Two towns are $7$ cm apart on it.` + "\n" +
+      `How far apart are they?`,
+    options: [
+      { text: String.raw`$175$ km`, isCorrect: true },
+      { text: String.raw`$32$ km`, misconception: "Added the scale to the distance instead of multiplying" },
+      { text: String.raw`$3.6$ km`, misconception: "Divided by the scale instead of multiplying" },
+      { text: String.raw`$25$ km`, misconception: "Gave the scale itself as the answer" },
+    ],
+  },
+
+  // ===== Scientific notation and unit conversion =====
+  {
+    id: "q-scientific-notation-5",
+    skillId: "scientific-notation",
+    prompt: String.raw`Write $6200000$ in scientific notation.`,
+    options: [
+      { text: String.raw`$6.2 \times 10^{6}$`, isCorrect: true },
+      { text: String.raw`$62 \times 10^{5}$`, misconception: "Left a coefficient outside the range 1 to 10" },
+      { text: String.raw`$6.2 \times 10^{7}$`, misconception: "Counted one decimal place too many" },
+      { text: String.raw`$6.2 \times 10^{-6}$`, misconception: "Right digits, wrong sign on the exponent" },
+    ],
+  },
+  {
+    id: "q-scientific-notation-6",
+    skillId: "scientific-notation",
+    prompt: String.raw`Evaluate  $\frac{8 \times 10^{9}}{2 \times 10^{4}}$`,
+    options: [
+      { text: String.raw`$4 \times 10^{5}$`, isCorrect: true },
+      { text: String.raw`$4 \times 10^{13}$`, misconception: "Added the exponents instead of subtracting them" },
+      { text: String.raw`$4 \times 10^{-5}$`, misconception: "Subtracted the exponents the wrong way round" },
+      { text: String.raw`$6 \times 10^{5}$`, misconception: "Subtracted the coefficients instead of dividing them" },
+    ],
+  },
+  {
+    id: "q-scientific-notation-7",
+    skillId: "scientific-notation",
+    prompt: String.raw`How many centimetres are in $2.5$ metres?`,
+    options: [
+      { text: String.raw`$250$`, isCorrect: true },
+      { text: String.raw`$0.025$`, misconception: "Converted in the wrong direction" },
+      { text: String.raw`$25$`, misconception: "Lost a factor of ten" },
+      { text: String.raw`$2500$`, misconception: "Converted to millimetres instead" },
+    ],
+  },
+  {
+    id: "q-scientific-notation-8",
+    skillId: "scientific-notation",
+    prompt: String.raw`Evaluate  $3 \times 10^{4} + 2 \times 10^{4}$`,
+    options: [
+      { text: String.raw`$5 \times 10^{4}$`, isCorrect: true },
+      { text: String.raw`$5 \times 10^{8}$`, misconception: "Added the exponents as well as the coefficients" },
+      { text: String.raw`$6 \times 10^{4}$`, misconception: "Multiplied the coefficients where the operation was addition" },
+      { text: String.raw`$6 \times 10^{8}$`, misconception: "Multiplied throughout instead of adding" },
+    ],
+  },
+
+  // ===== Reading and interpreting graphs =====
+  {
+    id: "q-read-graphs-5",
+    skillId: "read-graphs",
+    prompt:
+      `A scatter plot rises from left to right, with the points spread loosely around the trend.` + "\n" +
+      `What does it show?`,
+    options: [
+      { text: `The two quantities tend to rise together, with exceptions`, isCorrect: true },
+      { text: `A rise in one causes a rise in the other`, misconception: "Read a correlation as a cause" },
+      { text: `There is no relationship, because the points are spread out`, misconception: "Read spread as the absence of a trend" },
+      { text: `Every point follows the same rule exactly`, misconception: "Read a trend as a law the data must obey" },
+    ],
+  },
+  {
+    id: "q-read-graphs-6",
+    skillId: "read-graphs",
+    prompt:
+      `A bar chart's vertical axis is labelled "thousands". One bar reaches $12$.` + "\n" +
+      `What value does that bar show?`,
+    options: [
+      { text: String.raw`$12{,}000$`, isCorrect: true },
+      { text: String.raw`$12$`, misconception: "Read the number off the axis and ignored its label" },
+      { text: String.raw`$1{,}200$`, misconception: "Applied the label but lost a factor of ten" },
+      { text: String.raw`$120{,}000$`, misconception: "Applied the label twice" },
+    ],
+  },
+  {
+    id: "q-read-graphs-7",
+    skillId: "read-graphs",
+    prompt:
+      `Two cost lines cross on a graph of cost against quantity.` + "\n" +
+      `What does the crossing point mean?`,
+    options: [
+      { text: `At that quantity, the two costs are the same`, isCorrect: true },
+      { text: `The two options are identical from that point on`, misconception: "Read a crossing as the lines merging" },
+      { text: `One quantity is causing the other`, misconception: "Read a graph as a claim about cause" },
+      { text: `The graph contains an error`, misconception: "Treated an ordinary intersection as a mistake" },
+    ],
+  },
+  {
+    id: "q-read-graphs-8",
+    skillId: "read-graphs",
+    prompt:
+      `A line runs downward, reaches a low point in the middle, then runs upward to the end.` + "\n" +
+      `Which description fits?`,
+    options: [
+      { text: `It fell, bottomed out, then rose`, isCorrect: true },
+      { text: `It rose, peaked, then fell`, misconception: "Read the shape upside down" },
+      { text: `It did not change overall`, misconception: "Compared only the two endpoints and ignored the shape" },
+      { text: `It fell the whole way`, misconception: "Described only the first half of the graph" },
+    ],
+  },
+
+  // ===== Basic chemical bonding and polarity =====
+  {
+    id: "q-bonding-5",
+    skillId: "bonding-and-polarity",
+    prompt: `Which pair of atoms is most likely to form an ionic bond?`,
+    options: [
+      { text: `A metal and a nonmetal`, isCorrect: true },
+      { text: `Two nonmetals`, misconception: "Named the pair that shares electrons rather than transferring them" },
+      { text: `Two metals`, misconception: "Named the pair that pools electrons rather than transferring them" },
+      { text: `Any two atoms of very different size`, misconception: "Used size where the pull on electrons is what decides" },
+    ],
+  },
+  {
+    id: "q-bonding-6",
+    skillId: "bonding-and-polarity",
+    prompt: `Oil and water separate rather than mixing. Why?`,
+    options: [
+      { text: `Oil is nonpolar, and the water molecules hold on to each other instead`, isCorrect: true },
+      { text: `Oil is lighter than water`, misconception: "Named what decides which floats, not why they separate" },
+      { text: `Oil is an ionic compound`, misconception: "Named the wrong kind of substance entirely" },
+      { text: `Oil molecules are too large to fit between water molecules`, misconception: "Used size instead of polarity" },
+    ],
+  },
+  {
+    id: "q-bonding-7",
+    skillId: "bonding-and-polarity",
+    prompt: `Which bonds hold a water molecule together, and which act between two of them?`,
+    options: [
+      { text: `Covalent within the molecule, hydrogen bonding between molecules`, isCorrect: true },
+      { text: `Hydrogen bonding within the molecule, covalent between molecules`, misconception: "Swapped the bond inside for the attraction outside" },
+      { text: `Ionic within the molecule, covalent between molecules`, misconception: "Called shared electrons a transfer" },
+      { text: `Covalent in both cases`, misconception: "Missed the separate attraction between molecules" },
+    ],
+  },
+  {
+    id: "q-bonding-8",
+    skillId: "bonding-and-polarity",
+    prompt: `Table salt dissolves readily in water. What explains it?`,
+    options: [
+      { text: `Water's partial charges pull the ions apart and surround them`, isCorrect: true },
+      { text: `Salt is polar, like water`, misconception: "Called an ionic compound polar" },
+      { text: `Salt reacts chemically with water`, misconception: "Confused dissolving with a reaction" },
+      { text: `Salt is denser than water`, misconception: "Named a property with no bearing on dissolving" },
+    ],
+  },
+
+  // ===== Telling a rate of change apart from a level =====
+  {
+    id: "q-percent-change-5",
+    skillId: "percent-change-vs-level",
+    prompt:
+      `A shop raises a price by 25 percent, then advertises 25 percent off.` + "\n" +
+      `Is the final price the original one?`,
+    options: [
+      { text: `No — the discount comes off the higher price, so it ends below the original`, isCorrect: true },
+      { text: `Yes, exactly the original price`, misconception: "Applied both percentages to the same base" },
+      { text: `No — it ends above the original`, misconception: "Got the direction of the difference backwards" },
+      { text: `Only if the original price was 100`, misconception: "Thought the result depends on the starting number" },
+    ],
+  },
+  {
+    id: "q-percent-change-6",
+    skillId: "percent-change-vs-level",
+    prompt:
+      `A population grows at a steady 3 percent a year.` + "\n" +
+      `Is the number of people added each year the same?`,
+    options: [
+      { text: `No — 3 percent of a larger number is a larger number`, isCorrect: true },
+      { text: `Yes — the rate is constant, so the increase is too`, misconception: "Treated a constant rate as a constant amount" },
+      { text: `No — the number added shrinks each year`, misconception: "Got the direction backwards" },
+      { text: `Only once the population is large enough`, misconception: "Made a property of percentages depend on scale" },
+    ],
+  },
+  {
+    id: "q-percent-change-7",
+    skillId: "percent-change-vs-level",
+    prompt: String.raw`Sales rose from $200$ to $250$. What is the percent increase?`,
+    options: [
+      { text: `25 percent`, isCorrect: true },
+      { text: `50 percent`, misconception: "Gave the size of the increase rather than the percent" },
+      { text: `20 percent`, misconception: "Divided by the new figure instead of the original" },
+      { text: `80 percent`, misconception: "Gave the old figure as a share of the new one" },
+    ],
+  },
+  {
+    id: "q-percent-change-8",
+    skillId: "percent-change-vs-level",
+    prompt: String.raw`Which is the bigger increase: 10 percent of $400$, or 40 percent of $90$?`,
+    options: [
+      { text: String.raw`10 percent of $400$`, isCorrect: true },
+      { text: String.raw`40 percent of $90$`, misconception: "Compared the two rates and ignored what they applied to" },
+      { text: `They come to the same`, misconception: "Assumed the bases cancel the difference in rates exactly" },
+      { text: `There is not enough information`, misconception: "Treated two fully specified quantities as incomparable" },
+    ],
+  },
 ];

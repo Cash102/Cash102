@@ -175,4 +175,158 @@ export const COMPUTING_QUESTIONS: SeedQuestion[] = [
       },
     ],
   },
+
+  // ---- Second wave: four more of each, so a retake draws a different sample.
+
+  // ===== Binary and place value =====
+  {
+    id: "q-number-bases-5",
+    skillId: "number-bases",
+    prompt: String.raw`Which binary number is $6$?`,
+    options: [
+      { text: String.raw`$110$`, isCorrect: true },
+      { text: String.raw`$011$`, misconception: "Wrote the bits right to left" },
+      { text: String.raw`$101$`, misconception: "Off by one place value — that is 5" },
+      { text: String.raw`$1010$`, misconception: "Used one place too many — that is 10" },
+    ],
+  },
+  {
+    id: "q-number-bases-6",
+    skillId: "number-bases",
+    prompt: String.raw`What is $11111111$ in binary, written in base ten?`,
+    options: [
+      { text: String.raw`$255$`, isCorrect: true },
+      { text: String.raw`$256$`, misconception: "Gave the number of values rather than the largest one" },
+      { text: String.raw`$128$`, misconception: "Gave only the highest place value" },
+      { text: String.raw`$8$`, misconception: "Counted the bits rather than reading them" },
+    ],
+  },
+  {
+    id: "q-number-bases-7",
+    skillId: "number-bases",
+    prompt:
+      `Two bits give four combinations. Three bits give eight.` + "\n" +
+      `How many do four bits give?`,
+    options: [
+      { text: String.raw`$16$`, isCorrect: true },
+      { text: String.raw`$12$`, misconception: "Added four each time instead of doubling" },
+      { text: String.raw`$10$`, misconception: "Counted in tens rather than doublings" },
+      { text: String.raw`$32$`, misconception: "Doubled once too often" },
+    ],
+  },
+  {
+    id: "q-number-bases-8",
+    skillId: "number-bases",
+    prompt: `Why do computers use binary?`,
+    options: [
+      { text: `A circuit is reliably either on or off, which gives exactly two states`, isCorrect: true },
+      { text: `Binary numbers are shorter than decimal ones`, misconception: "Binary is longer, not shorter" },
+      { text: `People find binary easier to read`, misconception: "Chose a reason about people rather than about hardware" },
+      { text: `Base ten cannot represent very large numbers`, misconception: "Assumed a limitation that base ten does not have" },
+    ],
+  },
+
+  // ===== Deciding whether a condition is true =====
+  {
+    id: "q-boolean-logic-5",
+    skillId: "boolean-logic",
+    prompt:
+      String.raw`Let $x = 10$.` + "\n" +
+      String.raw`Is "$x > 5$ OR $x > 20$" true?`,
+    options: [
+      { text: `Yes — the first half is true, and OR needs only one`, isCorrect: true },
+      { text: String.raw`No — $10$ is not greater than $20$`, misconception: "Read OR as requiring both halves" },
+      { text: `No — the two halves contradict each other`, misconception: "Treated two conditions on the same value as a contradiction" },
+      { text: `There is no way to tell`, misconception: "Treated a fully specified condition as undetermined" },
+    ],
+  },
+  {
+    id: "q-boolean-logic-6",
+    skillId: "boolean-logic",
+    prompt: `"NOT (A OR B)" is the same as which of these?`,
+    options: [
+      { text: `NOT A AND NOT B`, isCorrect: true },
+      { text: `NOT A OR NOT B`, misconception: "Pushed the NOT inside without flipping OR to AND" },
+      { text: `A AND B`, misconception: "Dropped the negation altogether" },
+      { text: `NOT A OR B`, misconception: "Negated only the first term" },
+    ],
+  },
+  {
+    id: "q-boolean-logic-7",
+    skillId: "boolean-logic",
+    prompt:
+      `A loop should STOP when the list is empty OR a match is found.` + "\n" +
+      `Which condition should it CONTINUE on?`,
+    options: [
+      { text: `The list is not empty AND no match has been found`, isCorrect: true },
+      { text: `The list is not empty OR no match has been found`, misconception: "Negated the two parts but left the connective alone" },
+      { text: `The list is empty AND a match has been found`, misconception: "Negated the connective but not the parts" },
+      { text: `The list is empty OR a match has been found`, misconception: "Used the stopping condition as the continuing one" },
+    ],
+  },
+  {
+    id: "q-boolean-logic-8",
+    skillId: "boolean-logic",
+    prompt: String.raw`Which condition says "$x$ is between $1$ and $10$, endpoints included"?`,
+    options: [
+      { text: String.raw`$x \ge 1$ AND $x \le 10$`, isCorrect: true },
+      { text: String.raw`$x \ge 1$ OR $x \le 10$`, misconception: "Used OR, which every number satisfies" },
+      { text: String.raw`$x > 1$ AND $x < 10$`, misconception: "Excluded the endpoints the range included" },
+      { text: String.raw`$x \le 1$ AND $x \ge 10$`, misconception: "Reversed both comparisons, which nothing satisfies" },
+    ],
+  },
+
+  // ===== Following a written procedure exactly =====
+  {
+    id: "q-trace-a-procedure-5",
+    skillId: "trace-a-procedure",
+    prompt:
+      String.raw`A list holds $4$, $7$, $1$. Set $best$ to the first item. For each item, if the item is less than $best$, set $best$ to that item.` + "\n" +
+      String.raw`What is $best$ at the end?`,
+    options: [
+      { text: String.raw`$1$`, isCorrect: true },
+      { text: String.raw`$4$`, misconception: "Kept the starting value and never updated it" },
+      { text: String.raw`$7$`, misconception: "Tracked the largest instead of the smallest" },
+      { text: String.raw`$12$`, misconception: "Accumulated a total instead of comparing" },
+    ],
+  },
+  {
+    id: "q-trace-a-procedure-6",
+    skillId: "trace-a-procedure",
+    prompt:
+      String.raw`$x = 10$. Repeat three times: subtract $2$ from $x$.` + "\n" +
+      String.raw`What is $x$?`,
+    options: [
+      { text: String.raw`$4$`, isCorrect: true },
+      { text: String.raw`$8$`, misconception: "Ran the body once" },
+      { text: String.raw`$6$`, misconception: "Ran the body twice" },
+      { text: String.raw`$2$`, misconception: "Ran the body four times" },
+    ],
+  },
+  {
+    id: "q-trace-a-procedure-7",
+    skillId: "trace-a-procedure",
+    prompt:
+      String.raw`A loop runs for $i$ from $1$ to $4$.` + "\n" +
+      `How many times does the body run?`,
+    options: [
+      { text: String.raw`$4$`, isCorrect: true },
+      { text: String.raw`$3$`, misconception: "Counted the gaps between the values rather than the values" },
+      { text: String.raw`$5$`, misconception: "Counted one extra pass at the end" },
+      { text: String.raw`$1$`, misconception: "Assumed the body runs once regardless of the range" },
+    ],
+  },
+  {
+    id: "q-trace-a-procedure-8",
+    skillId: "trace-a-procedure",
+    prompt:
+      String.raw`$total$ starts at $0$. For each of $2$, $4$, $6$ in turn, SET $total$ TO that item.` + "\n" +
+      String.raw`What is $total$ at the end?`,
+    options: [
+      { text: String.raw`$6$`, isCorrect: true },
+      { text: String.raw`$12$`, misconception: "Read setting a value as adding to it" },
+      { text: String.raw`$2$`, misconception: "Kept the first value assigned" },
+      { text: String.raw`$0$`, misconception: "Assumed the loop never ran" },
+    ],
+  },
 ];
