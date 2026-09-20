@@ -140,52 +140,59 @@ question's slot and two questions render at once.
 
 ## State, and what is open
 
-Done: schema and migration; seed (27 courses, 8 prerequisite edges, 22 canonical
-skills, 72 CourseSkill links across 17 courses, 16 dependency edges, 79
-questions, 316 options); the `/check` flow; the report.
+Done: schema and migration; seed (27 courses, 8 prerequisite edges, 25 canonical
+skills, 93 CourseSkill links, 18 dependency edges, 91 questions, 364 options);
+the `/check` flow; the report.
 
-**17 of the 21 offered courses have a live check**, every one of them serving 12
-to 14 questions (`npm run audit:courses` prints the table). Every required
-course is covered. Most of them cost no questions at all: AP Precalculus, Calc
-BC II, Lit II, AP Euro, Micro, Environmental Science and Psychology are entirely
-made of skills another course already owned. Adding a course is chain text and
-weights — that is the return on canonical `Skill`, and it is the pattern to
-follow.
+**All 21 offered courses have a live check**, every one serving 12 to 14
+questions (`npm run audit:courses` prints the table). Most cost no questions at
+all — they are built from skills another course already owned. Adding a course
+is chain text and weights; that is the return on canonical `Skill`.
 
-Sixteen of the 22 canonical skills have `originCourseCode` NULL. The finding is
-no longer a Calculus story: the same middle school skills are load-bearing under
-maths, science, history, economics and computing, and the building teaches none
-of them.
+Nineteen of the 25 canonical skills have `originCourseCode` NULL. The finding is
+school-wide: the same middle school skills are load-bearing under maths,
+science, history, economics, computing and English, and the building teaches
+none of them.
 
-Four offered courses are deliberately not linked: **AP Language and Composition
-II** is the origin of the writing skills rather than a course that rests on
-them, so its own prerequisites would be middle school writing skills nobody has
-written yet; **AP Art History**, **AP Comparative Government** and **Film in the
-20th Century** are electives nobody has asked for yet, and all three would be
-cheap (Art History and Film reuse the writing skills, Comp Gov reuses the
-history ones).
+Two structural notes worth keeping:
+
+- **AP Language II does not lean on the four writing skills it teaches.** It is
+  their `originCourseCode`. A student sitting in that room has not been taught
+  them yet, and a report saying "last taught in AP Language and Composition II"
+  about the course they are currently in would be nonsense. Lang II rests on the
+  layer beneath instead: finding the argument in a text, telling support from
+  assertion, sentence boundaries. Keep that distinction when adding courses —
+  link a course to what it ASSUMES, never to what it teaches.
+- **An edge is only live if some course leans on both of its skills.** The
+  report orders the weak set, and the weak set comes from one course's
+  CourseSkill links. `read-for-the-argument -> claim-vs-summary` sat inert until
+  APUSH linked to both. When you author an edge, check that some course reaches
+  both ends of it.
 
 **The one thing still blocking a real pilot: no teacher has reviewed any of
 this.** Every skill chain outside the original Calculus seven, every question
 past the original fourteen, and every dependency edge outside Calculus is mine,
 marked TODO in place. They are defensible and they are not authoritative. The
-history and computing skills are grounded in the College Board frameworks (the
-APUSH historical thinking skills, the CSP computational thinking practices) but
-sit deliberately one layer BELOW them — they are what a student needs before the
-framework's skills are reachable, which is the same relationship the catalog has
-to the skill layer everywhere else here. That judgment needs a teacher on each
-subject.
+history and computing skills are grounded in the published College Board
+frameworks (the APUSH historical thinking skills, the CSP computational thinking
+practices) but sit deliberately one layer BELOW them — they are what a student
+needs before the framework's skills are reachable, which is the same
+relationship the catalog has to the skill layer everywhere else here. That
+judgment needs a teacher per subject.
 
 Also open:
 
 - **Graph questions have no graphs.** `Question` has no image field, so the
   `read-graphs` items describe their graph in words. That still catches axes
-  read backwards, a truncated axis, and a plateau read as a fall, but four
-  courses now lean on that skill, so the case for images has got stronger.
+  read backwards, a truncated axis, and a plateau read as a fall, but six
+  courses now lean on that skill, so the case for images keeps getting stronger.
 - **A teacher submission form.** Whatever writes questions must go through
   `assertValidStem` — that is the whole contract in invariant 2.
 - **Retake variety.** Most skills have exactly four questions, so a student who
   retakes a check sees most of them again. Six to eight per skill would fix it.
+- **Not-offered courses.** Six catalog entries are marked not offered for SY
+  25-26 and have no links. If any comes back, Statistics and Number Theory reuse
+  the maths skills and African American Studies reuses the history ones.
 
 Recently resolved, so you do not re-discover them: the catalog has 27 entries
 (all seeded; 26 was a miscount), and the question the prototype filed under

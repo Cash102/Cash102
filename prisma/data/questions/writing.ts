@@ -411,4 +411,271 @@ export const WRITING_QUESTIONS: SeedQuestion[] = [
       },
     ],
   },
+
+  // ===== Finding what a text argues, not what it is about =====
+  // The reading side of the writing chain, and what AP Language II rests on.
+  // Everything above this point is about producing an argument; these are about
+  // recognising one in front of you.
+  {
+    id: "q-read-for-the-argument-1",
+    skillId: "read-for-the-argument",
+    prompt:
+      `A columnist writes about school start times.` + "\n" +
+      `Which sentence states what the column ARGUES?`,
+    options: [
+      {
+        text: `Start times should move later, because the inconvenience falls on adults and the harm falls on students.`,
+        isCorrect: true,
+      },
+      {
+        text: `The column is about school start times and teenage sleep.`,
+        misconception: "Named the topic rather than the position taken on it",
+      },
+      {
+        text: `The columnist discusses several studies of adolescent sleep.`,
+        misconception: "Described what the writer does rather than what they claim",
+      },
+      {
+        text: `The column is well researched and hard to argue with.`,
+        misconception: "Evaluated the piece instead of stating its claim",
+      },
+    ],
+  },
+  {
+    id: "q-read-for-the-argument-2",
+    skillId: "read-for-the-argument",
+    prompt:
+      `You have read a paragraph twice and still cannot tell what it is arguing.` + "\n" +
+      `Which question helps most?`,
+    options: [
+      { text: `What would someone who disagreed with this paragraph say?`, isCorrect: true },
+      {
+        text: `What is this paragraph about?`,
+        misconception: "Asked for the topic, which you already had",
+      },
+      {
+        text: `Which words does the writer keep repeating?`,
+        misconception: "Went looking for style before finding the position",
+      },
+      {
+        text: `Is the writer right?`,
+        misconception: "Judged the argument before identifying it",
+      },
+    ],
+  },
+  {
+    id: "q-read-for-the-argument-3",
+    skillId: "read-for-the-argument",
+    prompt:
+      `An essay contains the sentence: "Of course, critics will say the programme costs too much."` + "\n" +
+      `What is that sentence doing?`,
+    options: [
+      { text: `Raising the other side's objection, usually just before answering it`, isCorrect: true },
+      {
+        text: `Stating the author's own position`,
+        misconception: "Read a concession as the author's claim",
+      },
+      {
+        text: `Summarising the essay so far`,
+        misconception: "Read a move inside the argument as a summary of it",
+      },
+      {
+        text: `Giving evidence for the author's claim`,
+        misconception: "Read an objection as support",
+      },
+    ],
+  },
+  {
+    id: "q-read-for-the-argument-4",
+    skillId: "read-for-the-argument",
+    prompt:
+      `Two sentences in a paragraph say related things. One is the claim, the other supports it.` + "\n" +
+      `How do you tell which is which?`,
+    options: [
+      {
+        text: `The support is there to make you accept the other one; the claim is what you are being asked to accept`,
+        isCorrect: true,
+      },
+      {
+        text: `The claim comes first`,
+        misconception: "Used position on the page instead of what the sentence does",
+      },
+      {
+        text: `The claim is the longer sentence`,
+        misconception: "Used length instead of what the sentence does",
+      },
+      {
+        text: `The claim is the one with the statistics in it`,
+        misconception: "Mistook the evidence for the thing it supports",
+      },
+    ],
+  },
+
+  // ===== Telling a supported statement from a bare assertion =====
+  {
+    id: "q-evidence-vs-assertion-1",
+    skillId: "evidence-vs-assertion",
+    prompt: `Which sentence offers evidence rather than asserting?`,
+    options: [
+      { text: `Attendance rose from 71 to 88 percent in the two terms after the change.`, isCorrect: true },
+      {
+        text: `Attendance improved dramatically after the change.`,
+        misconception: "Asserted the conclusion the figures were supposed to show",
+      },
+      {
+        text: `Everyone knows attendance is better now.`,
+        misconception: "Offered consensus in place of evidence",
+      },
+      {
+        text: `It is obvious that the change worked.`,
+        misconception: "Called the claim obvious instead of supporting it",
+      },
+    ],
+  },
+  {
+    id: "q-evidence-vs-assertion-2",
+    skillId: "evidence-vs-assertion",
+    prompt: `A writer says "studies show that this works." What is missing?`,
+    options: [
+      { text: `Which studies, and what they actually found`, isCorrect: true },
+      {
+        text: `Nothing — pointing at studies is enough`,
+        misconception: "Treated the gesture at evidence as the evidence",
+      },
+      {
+        text: `A stronger word than "works"`,
+        misconception: "Reached for emphasis where support was missing",
+      },
+      {
+        text: `The writer's own view of the studies`,
+        misconception: "Added a position where the gap was support",
+      },
+    ],
+  },
+  {
+    id: "q-evidence-vs-assertion-3",
+    skillId: "evidence-vs-assertion",
+    prompt: `Which of these could be checked by a reader who disagreed with you?`,
+    options: [
+      { text: `The policy has been in place since 2019 in four of the six districts.`, isCorrect: true },
+      {
+        text: `The policy is the best option available.`,
+        misconception: "Chose a judgment, which nobody can check",
+      },
+      {
+        text: `Most people support the policy.`,
+        misconception: "Chose a claim about opinion with nothing attached to it",
+      },
+      {
+        text: `The policy is clearly working.`,
+        misconception: "Chose an assertion with a confident adverb in front of it",
+      },
+    ],
+  },
+  {
+    id: "q-evidence-vs-assertion-4",
+    skillId: "evidence-vs-assertion",
+    prompt:
+      `Your claim is about students in general, and the support you have is your own experience.` + "\n" +
+      `Is that evidence?`,
+    options: [
+      { text: `It is evidence about one case, and it cannot carry a claim about many`, isCorrect: true },
+      {
+        text: `Yes — personal experience is the most convincing evidence there is`,
+        misconception: "Treated vividness as weight",
+      },
+      {
+        text: `No — personal experience is never evidence`,
+        misconception: "Ruled out a whole category instead of weighing what it covers",
+      },
+      {
+        text: `Only if it is affecting enough to persuade the reader`,
+        misconception: "Judged evidence by its effect rather than by what it can support",
+      },
+    ],
+  },
+
+  // ===== Telling a complete sentence from a fragment or a splice =====
+  {
+    id: "q-sentence-boundaries-1",
+    skillId: "sentence-boundaries",
+    prompt: `Which of these is a complete sentence?`,
+    options: [
+      { text: `The argument collapses.`, isCorrect: true },
+      {
+        text: `Although the argument collapses in the final paragraph.`,
+        misconception: "A subordinate clause left standing alone — a fragment",
+      },
+      {
+        text: `The argument collapsing in the final paragraph.`,
+        misconception: "A phrase with no main verb",
+      },
+      {
+        text: `Which is why the argument collapses.`,
+        misconception: "A relative clause with nothing to attach to",
+      },
+    ],
+  },
+  {
+    id: "q-sentence-boundaries-2",
+    skillId: "sentence-boundaries",
+    prompt: `What is wrong with: "The evidence is strong, the conclusion does not follow."`,
+    options: [
+      { text: `Two complete sentences joined by nothing but a comma`, isCorrect: true },
+      {
+        text: `Nothing — the comma is doing its job`,
+        misconception: "Read a comma splice as correct",
+      },
+      {
+        text: `The second half is a fragment`,
+        misconception: "Misread a complete clause as a fragment",
+      },
+      {
+        text: `It is too long to be one sentence`,
+        misconception: "Judged by length rather than by structure",
+      },
+    ],
+  },
+  {
+    id: "q-sentence-boundaries-3",
+    skillId: "sentence-boundaries",
+    prompt:
+      `"The evidence is strong, the conclusion does not follow."` + "\n" +
+      `Which repair keeps both halves and fixes the problem?`,
+    options: [
+      { text: `The evidence is strong, but the conclusion does not follow.`, isCorrect: true },
+      {
+        text: `The evidence is strong the conclusion does not follow.`,
+        misconception: "Removed the comma and made a run-on",
+      },
+      {
+        text: `The evidence is strong, however the conclusion does not follow.`,
+        misconception: "Swapped in a word that still needs a semicolon before it",
+      },
+      {
+        text: `The evidence is strong. Although the conclusion does not follow.`,
+        misconception: "Fixed the splice by creating a fragment",
+      },
+    ],
+  },
+  {
+    id: "q-sentence-boundaries-4",
+    skillId: "sentence-boundaries",
+    prompt: `Which of these is a run-on?`,
+    options: [
+      { text: `She read the whole book in a day she still could not write the essay.`, isCorrect: true },
+      {
+        text: `She read the whole book in a day; she still could not write the essay.`,
+        misconception: "A semicolon joins two complete clauses correctly",
+      },
+      {
+        text: `She read the whole book in a day, but she still could not write the essay.`,
+        misconception: "A comma with a conjunction joins two clauses correctly",
+      },
+      {
+        text: `After reading the whole book in a day, she still could not write the essay.`,
+        misconception: "An introductory clause followed by a comma is correct",
+      },
+    ],
+  },
 ];

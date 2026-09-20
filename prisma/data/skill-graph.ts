@@ -163,6 +163,27 @@ export const SKILLS: CanonicalSkill[] = [
   { id: "percent-change-vs-level",
     name: "Telling a rate of change apart from a level",
     chainType: "content", origin: "Middle school math", originCourseCode: null },
+
+  // ===== What AP Language II itself rests on =====
+  // Lang II is where claim-vs-summary, defensible-thesis, integrate-evidence
+  // and commentary-not-restatement are TAUGHT — it is their originCourseCode.
+  // So it cannot lean on them: a ninth grader arriving in that room is not
+  // expected to have them yet, and a report telling them "last taught in AP
+  // Language and Composition II" about the course they are sitting in would be
+  // nonsense. What Lang II rests on is the layer below, which nobody in the
+  // building teaches either.
+  // TODO: confirm with an AP Lang teacher.
+  { id: "read-for-the-argument",
+    name: "Finding what a text argues, not what it is about",
+    chainType: "skill", origin: "Middle school English", originCourseCode: null },
+
+  { id: "evidence-vs-assertion",
+    name: "Telling a supported statement from a bare assertion",
+    chainType: "skill", origin: "Middle school English", originCourseCode: null },
+
+  { id: "sentence-boundaries",
+    name: "Telling a complete sentence from a fragment or a splice",
+    chainType: "content", origin: "Middle school English", originCourseCode: null },
 ];
 
 // ---------------------------------------------------------------------------
@@ -452,6 +473,23 @@ export const COURSE_SKILLS: CourseSkillLink[] = [
             "Earn the evidence and analysis points"],
     practiceQuery: "using evidence in historical writing" },
 
+  // Reading a source for what it CLAIMS is the framework's "claims and
+  // evidence in sources", and it is the same skill AP Language calls finding
+  // the argument. Linking it here is also what makes the
+  // read-for-the-argument -> claim-vs-summary edge live: without a course that
+  // leans on both, the edge would sit in the graph doing nothing.
+  { courseCode: "HUFYHAR1", skillId: "read-for-the-argument", weight: 4,
+    chain: ["Find what a source argues, not just what it is about",
+            "Say what its author wanted the reader to conclude",
+            "Use a document as an argument rather than as a fact"],
+    practiceQuery: "identifying an author's argument and claim" },
+
+  { courseCode: "HUFYHAR1", skillId: "evidence-vs-assertion", weight: 3,
+    chain: ["Tell a supported statement from a bare assertion",
+            "Notice when a source asserts rather than shows",
+            "Choose evidence that would survive a challenge"],
+    practiceQuery: "evidence versus opinion in argument writing" },
+
   // ===== AP US HISTORY II — exam year, so argument carries more =====
   { courseCode: "HUFYHAR2", skillId: "sourcing-a-document", weight: 5,
     chain: ["Ask who wrote a source and what they wanted from it",
@@ -489,6 +527,18 @@ export const COURSE_SKILLS: CourseSkillLink[] = [
             "Earn the full evidence band on the DBQ"],
     practiceQuery: "using evidence in historical writing" },
 
+  { courseCode: "HUFYHAR2", skillId: "read-for-the-argument", weight: 4,
+    chain: ["Find what a source argues, not just what it is about",
+            "Set two documents against each other as arguments",
+            "Use a document as an argument rather than as a fact"],
+    practiceQuery: "identifying an author's argument and claim" },
+
+  { courseCode: "HUFYHAR2", skillId: "evidence-vs-assertion", weight: 4,
+    chain: ["Tell a supported statement from a bare assertion",
+            "Notice when a source asserts rather than shows",
+            "Choose evidence that would survive a challenge"],
+    practiceQuery: "evidence versus opinion in argument writing" },
+
   // ===== AP EUROPEAN HISTORY — same six skills, different century =====
   { courseCode: "HRFYHAR", skillId: "sourcing-a-document", weight: 5,
     chain: ["Ask who wrote a source and what they wanted from it",
@@ -513,6 +563,12 @@ export const COURSE_SKILLS: CourseSkillLink[] = [
             "Answer the verb the prompt actually asked",
             "Earn the thesis point on the long essay"],
     practiceQuery: "how to write a defensible thesis" },
+
+  { courseCode: "HRFYHAR", skillId: "read-for-the-argument", weight: 4,
+    chain: ["Find what a source argues, not just what it is about",
+            "Say what its author wanted the reader to conclude",
+            "Use a document as an argument rather than as a fact"],
+    practiceQuery: "identifying an author's argument and claim" },
 
   // ===== AP MACROECONOMICS =====
   { courseCode: "HEFYHAR1", skillId: "percent-change-vs-level", weight: 5,
@@ -639,6 +695,110 @@ export const COURSE_SKILLS: CourseSkillLink[] = [
             "Say why a correlation does not establish a cause",
             "Evaluate whether a study supports its own conclusion"],
     practiceQuery: "correlation versus causation research" },
+
+  // ===== AP LANGUAGE AND COMPOSITION II — ninth grade =====
+  // Note what is NOT here: the four writing skills this course teaches. It
+  // rests on the layer beneath them instead. Sourcing is the interesting reuse
+  // — the rhetorical situation (speaker, audience, purpose) is the same skill
+  // APUSH calls sourcing a document, so one set of questions serves both.
+  { courseCode: "ELFYLAC2", skillId: "read-for-the-argument", weight: 5,
+    chain: ["Find what a text argues, not just what it is about",
+            "Track how the argument is built across paragraphs",
+            "Analyze rhetorical choices instead of listing them"],
+    practiceQuery: "identifying an author's argument and claim" },
+
+  { courseCode: "ELFYLAC2", skillId: "sourcing-a-document", weight: 5,
+    chain: ["Ask who wrote a text and what they wanted from it",
+            "Name the speaker, audience and purpose",
+            "Write a rhetorical analysis that is about the choices"],
+    practiceQuery: "rhetorical situation speaker audience purpose" },
+
+  { courseCode: "ELFYLAC2", skillId: "evidence-vs-assertion", weight: 4,
+    chain: ["Tell a supported statement from a bare assertion",
+            "Choose evidence a skeptical reader would accept",
+            "Earn the evidence and commentary points on the argument essay"],
+    practiceQuery: "evidence versus opinion in argument writing" },
+
+  { courseCode: "ELFYLAC2", skillId: "sentence-boundaries", weight: 3,
+    chain: ["Tell a complete sentence from a fragment or a splice",
+            "Hold a complex idea together in one sentence",
+            "Stop losing points to sentence errors under time pressure"],
+    practiceQuery: "sentence fragments run-ons comma splices" },
+
+  // ===== AP ART HISTORY =====
+  { courseCode: "HAFYHAH", skillId: "contextualize-an-event", weight: 5,
+    chain: ["Say what else was going on at the time",
+            "Place a work in the society that paid for it",
+            "Earn the contextual analysis points"],
+    practiceQuery: "historical contextualization" },
+
+  { courseCode: "HAFYHAH", skillId: "claim-vs-summary", weight: 5,
+    chain: ["Recognize when a sentence argues vs. when it just reports",
+            "Write about a work instead of only describing it",
+            "Move past description on the free response"],
+    practiceQuery: "claim versus summary thesis writing" },
+
+  { courseCode: "HAFYHAH", skillId: "integrate-evidence", weight: 4,
+    chain: ["Choose evidence that actually supports the claim",
+            "Point at a specific visual detail, not a general impression",
+            "Support an attribution with what is actually visible"],
+    practiceQuery: "using visual evidence art analysis" },
+
+  { courseCode: "HAFYHAH", skillId: "sourcing-a-document", weight: 3,
+    chain: ["Ask who made a work and what they wanted from it",
+            "Account for the patron as well as the artist",
+            "Explain function and audience, not only style"],
+    practiceQuery: "analyzing primary sources point of view" },
+
+  // ===== AP COMPARATIVE GOVERNMENT =====
+  { courseCode: "HGFYHAR", skillId: "causation-vs-sequence", weight: 5,
+    chain: ["Tell a cause apart from what merely came after",
+            "Explain why a regime changed, not only when",
+            "Answer a causation prompt about a country you studied"],
+    practiceQuery: "correlation versus causation history" },
+
+  { courseCode: "HGFYHAR", skillId: "read-graphs", weight: 4,
+    chain: ["Read axes, units, and scale correctly",
+            "Compare two countries from a single figure",
+            "Answer the quantitative analysis question"],
+    practiceQuery: "interpreting graphs data analysis" },
+
+  { courseCode: "HGFYHAR", skillId: "contextualize-an-event", weight: 4,
+    chain: ["Say what else was going on at the time",
+            "Place a policy in the system that produced it",
+            "Compare across countries without flattening them"],
+    practiceQuery: "historical contextualization" },
+
+  { courseCode: "HGFYHAR", skillId: "percent-change-vs-level", weight: 3,
+    chain: ["Tell a rate of change apart from a level",
+            "Read what a falling growth rate means for a country",
+            "Interpret development and election data"],
+    practiceQuery: "percent change versus level rate of change" },
+
+  // ===== FILM IN THE 20TH CENTURY =====
+  { courseCode: "ELFYFILI", skillId: "claim-vs-summary", weight: 5,
+    chain: ["Recognize when a sentence argues vs. when it just reports",
+            "Write about a film without recounting the plot",
+            "Make an argument about what the film is doing"],
+    practiceQuery: "claim versus summary thesis writing" },
+
+  { courseCode: "ELFYFILI", skillId: "commentary-not-restatement", weight: 5,
+    chain: ["Explain how the evidence proves the claim",
+            "Connect a shot or a cut to its effect on meaning",
+            "Write analysis rather than description"],
+    practiceQuery: "film analysis technique and meaning" },
+
+  { courseCode: "ELFYFILI", skillId: "integrate-evidence", weight: 4,
+    chain: ["Choose evidence that actually supports the claim",
+            "Point at a specific shot instead of a whole scene",
+            "Support a reading with what is on the screen"],
+    practiceQuery: "integrating textual evidence quotes" },
+
+  { courseCode: "ELFYFILI", skillId: "contextualize-an-event", weight: 3,
+    chain: ["Say what else was going on at the time",
+            "Place a film in the decade that produced it",
+            "Explain why the film could only have been made then"],
+    practiceQuery: "historical contextualization" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -720,4 +880,14 @@ export const SKILL_DEPENDENCIES: SkillEdge[] = [
   // ===== COMPUTING =====
   { prerequisiteId: "boolean-logic", dependentId: "trace-a-procedure", strength: 4,
     rationale: "Tracing a branch means deciding whether its condition is true, one line at a time." },
+
+  // ===== UNDER THE WRITING CHAIN =====
+  // These two run from the Lang II layer into the Lit and APUSH layer, which
+  // is what the graph is for: a student weak on finding an argument in
+  // someone else's writing is told so before being told to write one.
+  { prerequisiteId: "read-for-the-argument", dependentId: "claim-vs-summary", strength: 4,
+    rationale: "Recognising a claim in someone else's writing comes before writing one of your own." },
+
+  { prerequisiteId: "evidence-vs-assertion", dependentId: "integrate-evidence", strength: 3,
+    rationale: "Choosing a quote that supports a claim assumes you can tell support from a confident sentence." },
 ];
