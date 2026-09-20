@@ -20,7 +20,7 @@
 import { existsSync } from "node:fs";
 
 import { chromium } from "playwright";
-import { PrismaClient } from "@prisma/client";
+import { createPrismaClient } from "../lib/db-driver";
 import { parseStem } from "../lib/notation";
 
 const BASE = process.env.E2E_BASE ?? "http://localhost:3000";
@@ -32,7 +32,7 @@ const PREINSTALLED = "/opt/pw-browsers/chromium";
 const CHROMIUM =
   process.env.CHROMIUM_PATH ?? (existsSync(PREINSTALLED) ? PREINSTALLED : undefined);
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 let failures = 0;
 
 function check(condition: boolean, label: string, detail = ""): void {

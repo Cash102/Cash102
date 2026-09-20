@@ -20,13 +20,19 @@
  * the row, rather than landing in a table the app trusts.
  */
 
-import { PrismaClient, Subject } from "@prisma/client";
+import { Subject } from "@prisma/client";
+
+import { createPrismaClient, usingRemoteDriver } from "../lib/db-driver";
 import { COURSES, CONCURRENT_PREREQUISITES, isOffered } from "./data/catalog";
 import { SKILLS, COURSE_SKILLS, SKILL_DEPENDENCIES } from "./data/skill-graph";
 import { QUESTIONS } from "./data/questions";
 import { assertValidStem } from "../lib/notation";
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
+
+const TX_TIMEOUT_MS = Number(
+  process.env.SEED_TX_TIMEOUT_MS ?? (usingRemoteDriver() ? 600_000 : 60_000),
+);
 
 /** TS catalog subject -> Prisma enum. The enum maps back to the spaced string. */
 const SUBJECTS = {
@@ -240,7 +246,11 @@ async function write(): Promise<void> {
         });
       }
     },
-    { timeout: 60_000 },
+    // A ceiling, not a wait, so a generous one costs nothing. Sixty seconds is
+    // plenty over a local socket; the same ~1100 statements over a WebSocket to
+    // a Neon region are ~1100 round trips, which blows through it and fails
+    // with P2028. SEED_TX_TIMEOUT_MS overrides if a link is slower still.
+    { timeout: TX_TIMEOUT_MS },
   );
 }
 

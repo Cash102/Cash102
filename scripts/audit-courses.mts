@@ -9,13 +9,13 @@
  * appearing at all. This prints the size of every check so that shows up.
  */
 
-import { PrismaClient } from "@prisma/client";
+import { createPrismaClient } from "../lib/db-driver";
 import { servedQuestionIds } from "../lib/attempt";
 
 const THIN = 10;
 /** How many distinct attempt ids to simulate when measuring retake overlap. */
 const SAMPLES = 8;
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 /**
  * Average number of questions two different attempts at the same course share.

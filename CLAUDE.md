@@ -34,19 +34,38 @@ Two environment variables, both required (`.env`, gitignored; see
   migration engine needs advisory locks and prepared statements, which a
   transaction-mode pooler does not provide. Locally, set both the same.
 
-The database lives on Neon, so it outlives any container. Two things about that
-are worth knowing before you waste an hour on them:
+The database lives on Neon, so it outlives any container. Three things about
+that are worth knowing before you waste an hour on them:
 
 - **`.env` is gitignored, so it does not travel.** A fresh checkout — or a fresh
   cloud container — has no connection string at all. Get it from the Neon
   dashboard rather than expecting it to be in the repo.
-- **A Claude Code web container cannot reach Neon.** Its egress allows HTTPS and
-  blocks raw Postgres on 5432, so Prisma, `psql` and the app itself all fail
-  there with `P1001: Can't reach database server`. That is the sandbox, not the
-  config: the same string works from a laptop or from Vercel. For work inside
-  such a container, run a local Postgres and point `.env` at it (there is a
-  commented pair of lines in `.env` for exactly this), or reach Neon over its
-  SQL-over-HTTP endpoint, which does go through the proxy.
+- **A network that blocks 5432 needs `DB_OVER_HTTPS=1`.** A Claude Code web
+  container allows HTTPS and blocks raw Postgres, so Prisma, `psql` and the app
+  all fail there with `P1001: Can't reach database server` however correct the
+  connection string is. Setting that variable routes Prisma through Neon's
+  serverless WebSocket driver over 443 instead (`lib/db-driver.ts`), which the
+  proxy does allow. It also wants `NODE_EXTRA_CA_CERTS=/root/.ccr/ca-bundle.crt`
+  there, because the proxy re-terminates TLS:
+
+  ```bash
+  DB_OVER_HTTPS=1 NODE_EXTRA_CA_CERTS=/root/.ccr/ca-bundle.crt npm run db:seed
+  ```
+
+  Unset, nothing in that file runs and Prisma opens an ordinary connection,
+  which is what a laptop and a long-lived Node server should keep doing. The
+  same switch is the right one for a serverless deploy, where a WebSocket to
+  the pooler beats a TCP connection per invocation.
+- **The driver must not be bundled.** `next.config.mjs` lists the four driver
+  packages as external. Bundled, the adapter gets a different copy of
+  `@neondatabase/serverless` than `lib/db-driver.ts` configures, the WebSocket
+  settings are silently ignored, and every query dies with "Connection
+  terminated unexpectedly" while the scripts keep working — an hour of
+  confusion if you do not know it.
+
+`createPrismaClient()` in `lib/db-driver.ts` is the only place a client is
+built. The app, the seed and the scripts all go through it, so the switch cannot
+apply to some of them and not others.
 
 ## The data model, in one paragraph
 
