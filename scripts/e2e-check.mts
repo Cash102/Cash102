@@ -17,12 +17,20 @@
  *   - the last answer redirects to the report, and a completed attempt stays there
  */
 
+import { existsSync } from "node:fs";
+
 import { chromium } from "playwright";
 import { PrismaClient } from "@prisma/client";
 import { parseStem } from "../lib/notation";
 
 const BASE = process.env.E2E_BASE ?? "http://localhost:3000";
-const CHROMIUM = process.env.CHROMIUM_PATH;
+// Some containers ship a chromium at a fixed path and skip Playwright's own
+// browser download, so a playwright upgrade leaves the bundled build missing
+// while a perfectly good browser sits next to it. Prefer the explicit path,
+// fall back to that one, and only then let Playwright look for its own.
+const PREINSTALLED = "/opt/pw-browsers/chromium";
+const CHROMIUM =
+  process.env.CHROMIUM_PATH ?? (existsSync(PREINSTALLED) ? PREINSTALLED : undefined);
 
 const prisma = new PrismaClient();
 let failures = 0;
